@@ -27,7 +27,7 @@ const checkRows = c.rows.map((r) => ({
         <span class="hero__l1">Meet <span class="accent">Moche<span class="tight">.</span></span></span>
         <span class="hero__l2">Your crypto research companion.</span>
       </h1>
-      <p class="hero__lead">Trading signals, token and wallet checks, and tools to follow the wallets that matter.</p>
+      <p class="hero__lead">Signals. Token checks. Smarter wallet research.</p>
       <div class="btn-row hero__btns">
         <a href="/products/" class="btn btn--primary">Explore Products <Icon name="arrow-right" /></a>
         <a href="#how-it-works" class="btn btn--secondary">How It Works</a>
@@ -45,11 +45,11 @@ const checkRows = c.rows.map((r) => ({
           height="347"
         />
         <img
-          src="/images/moche-peek-m-400.webp"
-          srcset="/images/moche-peek-m-240.webp 240w, /images/moche-peek-m-400.webp 400w"
-          sizes="200px"
-          width="400"
-          height="301"
+          src="/images/moche-wave-m-440.webp"
+          srcset="/images/moche-wave-m-260.webp 260w, /images/moche-wave-m-440.webp 440w"
+          sizes="210px"
+          width="440"
+          height="348"
           alt=""
           fetchpriority="high"
           decoding="async"
@@ -170,7 +170,7 @@ const checkRows = c.rows.map((r) => ({
 
   /* ---------- Type ---------- */
   .hero__h1 { font-weight: 800; letter-spacing: -0.04em; line-height: 1.02; }
-  .hero__l1 { display: block; font-size: clamp(2.375rem, 1.4rem + 4.4vw, 5rem); }
+  .hero__l1 { display: block; font-size: clamp(2.125rem, 1.3rem + 4.4vw, 5rem); }
   .hero__l2 {
     display: block; margin-top: 0.18em;
     font-size: clamp(1.25rem, 0.9rem + 1.7vw, 2.5rem); line-height: 1.1; letter-spacing: -0.03em;
@@ -181,16 +181,18 @@ const checkRows = c.rows.map((r) => ({
 
   /* ---------- Mobile (default) ---------- */
   .hero__copy { position: relative; z-index: 2; }
-  .hero__l2, .hero__lead { max-width: 58%; }
+  .hero__l2 { max-width: 64%; text-wrap: wrap; }
+  .hero__lead { max-width: 52%; }
   .hero__btns { display: none; }
   .hero__mascot {
     position: absolute; z-index: 1;
-    right: calc(var(--gutter) * -1 - 10px);
-    bottom: 112px;            /* = command rows height (130px) minus 18px overlap */
-    width: min(48vw, 220px);
+    right: calc(var(--gutter) * -1 + 2px);
+    bottom: 116px;            /* = command rows height (130px) minus 14px overlap */
+    width: min(50vw, 205px);
   }
   .hero__mascot img { width: 100%; height: auto; }
-  .hero__whoosh, .hero__paw { display: none; }
+  .hero__paw { display: none; }
+  .hero__whoosh { position: absolute; left: -2%; top: 36%; width: 16%; color: var(--c-cobalt); }
   .hero__pic { display: block; }
 
   .cmdrows { position: relative; z-index: 2; display: grid; gap: 10px; margin-top: 22px; }

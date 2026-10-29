@@ -75,30 +75,32 @@ const minShort = `${copyTradingAccess.minimumHolding / 1_000_000}M`;
 </CommandSheet>
 
 <style>
-  .toolkit { padding: 36px 0 var(--section-y); background: linear-gradient(180deg, #f4f9ff 0%, #fff 220px); }
+  .toolkit { padding: 32px 0 var(--section-y); background: linear-gradient(180deg, #f4f9ff 0%, var(--c-pale) 60%, #fff 100%); }
   .tk__head { margin-bottom: 16px; }
-  .tk__head p { margin-top: 6px; color: var(--c-ink-2); font-size: var(--fs-md); }
+  .tk__head .h2 { font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.375rem); }
+  .tk__head p { margin-top: 4px; color: var(--c-ink-2); font-size: var(--fs-sm); line-height: 1.45; }
 
   .tk { display: grid; gap: 10px; }
   .tk__item {
-    display: flex; align-items: center; gap: 14px;
-    min-height: 76px; padding: 12px 14px 12px 12px;
+    display: flex; align-items: center; gap: 12px;
+    min-height: 72px; padding: 12px 12px 12px 12px;
     background: #fff; border: 1px solid var(--c-border); border-radius: var(--r-lg);
     box-shadow: var(--sh-1);
     transition: border-color var(--dur-1), box-shadow var(--dur-2);
   }
   .tk__item:hover { border-color: #c8d6ec; box-shadow: var(--sh-2); }
   .tk__item--launchpad .tk__ic { background: var(--c-tint); }
-  .tk__ic { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 14px; background: var(--c-tint); color: var(--c-cobalt); }
+  .tk__ic { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 13px; background: var(--c-tint); color: var(--c-cobalt); }
   .tk__ic :global(svg) { width: 24px; height: 24px; }
   .tk__ic--solid { background: var(--c-cobalt); color: #fff; }
   .tk__body { flex: 1; min-width: 0; display: grid; gap: 2px; }
-  .tk__name { font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; color: var(--c-navy); }
-  .tk__desc { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: 1.4; }
-  .tk__badge { flex: none; display: grid; text-align: center; line-height: 1.25; padding: 6px 10px; border-radius: 10px; font-size: 0.6875rem; font-weight: 600; }
+  .tk__name { font-weight: 800; font-size: 0.9375rem; letter-spacing: -0.01em; color: var(--c-navy); }
+  .tk__desc { font-size: 0.8125rem; color: var(--c-ink-2); line-height: 1.4; }
+  .tk__ic--solid { background: var(--c-tint); color: var(--c-cobalt); }
+  .tk__badge { flex: none; display: grid; text-align: center; line-height: 1.2; padding: 5px 8px; border-radius: 9px; font-size: 0.625rem; font-weight: 600; }
   .tk__badge--holder { background: var(--c-tint); color: var(--c-cobalt-press); }
-  .tk__badge--holder strong { font-size: 0.8125rem; font-weight: 800; }
-  .tk__badge--soon { background: #eef1f6; color: var(--c-ink-2); border: 1px solid var(--c-border); font-size: var(--fs-xs); }
+  .tk__badge--holder strong { font-size: 0.75rem; font-weight: 800; }
+  .tk__badge--soon { background: #eef1f6; color: var(--c-ink-2); border: 1px solid var(--c-border); font-size: 0.6875rem; padding: 6px 9px; }
   .tk :global(.tk__chev) { width: 18px; height: 18px; flex: none; color: var(--c-ink-3); transition: transform var(--dur-2) var(--ease), color var(--dur-1); }
   .tk__item:hover :global(.tk__chev) { transform: translateX(3px); color: var(--c-cobalt); }
 
@@ -125,9 +127,16 @@ const minShort = `${copyTradingAccess.minimumHolding / 1_000_000}M`;
     .toolkit { padding-top: 40px; }
     .tk__head { margin-bottom: 20px; }
     .tk__head p { font-size: var(--fs-lg); }
+    .tk__badge { font-size: 0.6875rem; padding: 6px 10px; }
+    .tk__badge--holder strong { font-size: 0.8125rem; }
     .tk { grid-template-columns: 1fr 1fr; gap: 16px; }
     .tk__item { min-height: 92px; padding: 18px 20px 18px 18px; gap: 18px; }
     .tk__ic { width: 56px; height: 56px; border-radius: 16px; }
+    .tk__ic--solid { background: var(--c-cobalt); color: #fff; }
+    .tk__desc { font-size: var(--fs-sm); }
+    .tk__head p { font-size: var(--fs-lg); }
+    .tk__badge { font-size: 0.6875rem; padding: 6px 10px; }
+    .tk__badge--holder strong { font-size: 0.8125rem; }
     .tk__ic :global(svg) { width: 26px; height: 26px; }
     .tk__name { font-size: 1.0625rem; }
     .hbar { justify-content: center; min-height: 64px; margin-top: 20px; }
