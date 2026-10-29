@@ -29,3 +29,10 @@ export const CORE_ASSETS: Asset[] = [
 
 /** Marker written into token metadata so usemoche launches can be recognised. */
 export const LAUNCHPAD_TAG = 'usemoche';
+
+/**
+ * Fresh start: only pools activated at or after this Unix time (seconds) are listed
+ * in Markets and My activity. Older pools on the shared platform wallet stay on-chain
+ * and reachable by direct link, but are hidden from discovery.
+ */
+export const LISTING_START_UNIX = 1793300569; // 2026-10-30

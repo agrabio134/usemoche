@@ -7,7 +7,7 @@ import { CpAmm } from '@meteora-ag/cp-amm-sdk';
 import { unpackMint, TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID, getExtensionTypes, ExtensionType, getScaledUiAmountConfig, getTransferFeeConfig, getPausableConfig, getTransferHook, getDefaultAccountState, AccountState, getAssociatedTokenAddressSync } from '@solana/spl-token';
 import BN from 'bn.js';
 import bs58 from 'bs58';
-import { PLATFORM_WALLET, MAINNET_GENESIS, SOL, type Asset } from '../lib/constants';
+import { PLATFORM_WALLET, MAINNET_GENESIS, SOL, LISTING_START_UNIX, type Asset } from '../lib/constants';
 import { launchSchema, type LaunchInput, toAtomic, fromAtomic, safeUrl } from '../lib/validation';
 export const connection=new Connection(`${location.origin}/api/rpc`,{commitment:'confirmed',disableRetryOnRateLimit:true});
 export const dbc=new DynamicBondingCurveClient(connection,'confirmed');
@@ -123,7 +123,8 @@ export async function listMarkets(creator?:string){
  const pools=(await Promise.all(configs.map(c=>dbc.state.getPoolsByConfig(c.publicKey)))).flat();
  // Delisted from discovery; direct market access and creator fee claims remain available.
  const delistedPools=new Set(['7hcMR77XyetowGran4V1g25W9Zru5Q6khUspTC2YfXbt']);
- const relevant=creator?pools.filter(p=>p.account.poolState.creator.toBase58()===creator):pools.filter(p=>!delistedPools.has(p.publicKey.toBase58()));
+ const fresh=pools.filter(p=>p.account.poolState.activationPoint.gten(LISTING_START_UNIX));
+ const relevant=creator?fresh.filter(p=>p.account.poolState.creator.toBase58()===creator):fresh.filter(p=>!delistedPools.has(p.publicKey.toBase58()));
  return Promise.all(relevant.sort((a,b)=>b.account.poolState.activationPoint.cmp(a.account.poolState.activationPoint)).slice(0,24).map(p=>loadMarket(p.publicKey.toBase58())));
 }
 export async function tokenBalance(owner:string,mint:string){
