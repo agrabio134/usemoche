@@ -4,9 +4,8 @@ import Hero from '../components/home/Hero.astro';
 import Toolkit from '../components/home/Toolkit.astro';
 import HowItWorks from '../components/home/HowItWorks.astro';
 import HolderAccess from '../components/HolderAccess.astro';
-import LaunchpadMock from '../components/LaunchpadMock.astro';
+import LaunchpadPromo from '../components/home/LaunchpadPromo.astro';
 import FAQ from '../components/FAQ.astro';
-import Icon from '../components/Icon.astro';
 import { faq } from '../content/site-content';
 ---
 <Base
@@ -20,20 +19,7 @@ import { faq } from '../content/site-content';
   <HowItWorks />
   <HolderAccess />
 
-  <section class="section section--tint" aria-labelledby="lp-title">
-    <div class="container split">
-      <div class="section-head" style="margin-bottom:0">
-        <span class="badge badge--soon"><Icon name="clock" /> Coming Soon</span>
-        <h2 id="lp-title" class="h2">Moche Launchpad</h2>
-        <p class="lead">A simple, friendly place to create new tokens and discover what others are launching.</p>
-        <p class="muted">Launch date, fees and launch mechanics haven’t been announced yet. We’ll share details when they’re final.</p>
-        <div class="btn-row" style="margin-top:var(--s-6)">
-          <a href="/launchpad/" class="btn btn--secondary">Preview the launchpad <Icon name="arrow-right" /></a>
-        </div>
-      </div>
-      <LaunchpadMock idPrefix="home-lp" />
-    </div>
-  </section>
+  <LaunchpadPromo />
 
   <FAQ items={faq} intro="Short answers to the most common questions. Details that aren’t final yet are marked as such." />
 </Base>

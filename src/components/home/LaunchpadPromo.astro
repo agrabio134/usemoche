@@ -1,0 +1,60 @@
+---
+import Icon from '../Icon.astro';
+const HYPE = '98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g';
+---
+<section class="section section--tint lpp" aria-labelledby="lpp-title">
+  <div class="container split">
+    <div class="lpp__copy">
+      <span class="badge badge--ok"><span class="dot"></span> Live on Solana</span>
+      <h2 id="lpp-title" class="h2">Moche Launchpad</h2>
+      <p class="lead">Launch a token and its market in one transaction, then watch it grow toward graduation.</p>
+      <ul role="list" class="check-list lpp__list">
+        <li><Icon name="rocket" /> <span><strong>Meteora bonding curve.</strong> Opens at a $4,000 market cap, graduates at $35,000.</span></li>
+        <li><Icon name="layers" /> <span><strong>Pick your pair.</strong> HYPE, SOL, USDC or a tokenized stock.</span></li>
+        <li><Icon name="lock" /> <span><strong>Liquidity stays.</strong> 100% of graduated liquidity is locked forever.</span></li>
+      </ul>
+      <div class="btn-row">
+        <a href="/launchpad/#launch" class="btn btn--primary">Launch a token <Icon name="arrow-right" /></a>
+        <a href="/launchpad/" class="btn btn--secondary">Browse launches</a>
+      </div>
+    </div>
+
+    <a class="lpp__hype" href={`/launchpad/#launch?pair=${HYPE}`}>
+      <span class="lpp__mark" aria-hidden="true">H</span>
+      <span class="lpp__tag"><Icon name="sparkle" size={14} /> Featured pair</span>
+      <strong class="lpp__title">Launch against HYPE</strong>
+      <span class="lpp__text">Pair your token with Hyperliquid’s HYPE, bridged to Solana via Wormhole. Traders buy with HYPE and curve fees accrue in HYPE.</span>
+      <span class="lpp__cta">Start a HYPE pair <Icon name="arrow-right" size={18} /></span>
+      <img src="/images/moche-wave-360.webp" width="360" height="356" alt="" class="lpp__moche" loading="lazy" decoding="async" />
+    </a>
+  </div>
+</section>
+
+<style>
+  .lpp__copy { display: grid; gap: var(--s-4); }
+  .lpp__copy .badge { justify-self: start; }
+  .lpp__list { margin-top: 4px; }
+  .lpp__list li { font-size: var(--fs-md); color: var(--c-ink-2); }
+  .lpp__list strong { color: var(--c-ink); }
+  .lpp__hype {
+    position: relative; overflow: hidden;
+    display: grid; gap: 10px; align-content: start;
+    min-height: 300px; padding: 28px; padding-right: 40%;
+    border-radius: var(--r-xl); color: #d9fff6; text-decoration: none;
+    background: radial-gradient(420px 220px at 0% 0%, rgb(42 213 180 / 0.35), transparent 70%), linear-gradient(135deg, #0b2b2c, #0f3d3e 60%, #11504d);
+    box-shadow: var(--sh-3);
+    transition: transform var(--dur-2) var(--ease);
+  }
+  .lpp__hype:hover { transform: translateY(-2px); }
+  .lpp__hype:focus-visible { box-shadow: var(--focus-ring); }
+  .lpp__mark { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-weight: 900; font-size: 1.5rem; color: #0b2b2c; background: #2ad5b4; }
+  .lpp__tag { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #2ad5b4; }
+  .lpp__title { color: #fff; font-size: var(--fs-h3); font-weight: 800; letter-spacing: -0.02em; }
+  .lpp__text { font-size: var(--fs-sm); line-height: 1.55; color: #b6e9dc; }
+  .lpp__cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-weight: 800; color: #fff; }
+  .lpp__moche { position: absolute; right: -10px; bottom: -14px; width: 42%; max-width: 230px; height: auto; }
+  @media (max-width: 559.98px) {
+    .lpp__hype { padding: 22px; padding-bottom: 150px; }
+    .lpp__moche { width: 150px; }
+  }
+</style>

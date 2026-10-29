@@ -49,9 +49,9 @@ export const products = [
     id: 'launchpad',
     name: 'Moche Launchpad',
     icon: 'rocket',
-    badge: { tone: 'soon', text: 'Coming Soon' },
-    short: 'Create and discover new tokens.',
-    summary: 'A simple way to create and discover new tokens.',
+    badge: { tone: 'live', text: 'Live' },
+    short: 'Launch a Solana token in one transaction. HYPE pairs featured.',
+    summary: 'Launch a Solana token with a real bonding curve. Pair it with HYPE, SOL, USDC or a tokenized stock.',
     href: '/launchpad/',
   },
 ] as const;
@@ -107,7 +107,7 @@ const networksAnswer =
 export const faq = [
   {
     q: 'What is usemoche?',
-    a: `usemoche is a set of crypto research tools with a friendly face, Moche. You mention ${brand.xHandle} under a post on X with a command, and Moche replies with analysis. It also includes KOL wallet copy trading and an upcoming launchpad.`,
+    a: `usemoche is a set of crypto research tools with a friendly face, Moche. You mention ${brand.xHandle} under a post on X with a command, and Moche replies with analysis. It also includes KOL wallet copy trading and the Moche Launchpad for creating Solana tokens.`,
   },
   {
     q: 'How do I request a signal?',
@@ -127,7 +127,7 @@ export const faq = [
   },
   {
     q: 'Is the launchpad available?',
-    a: 'Not yet. Moche Launchpad is coming soon. Launch date, fees and launch mechanics haven’t been announced.',
+    a: 'Yes. The Moche Launchpad is live on Solana mainnet. Every token has a 1B supply and opens on a Meteora bonding curve at a $4,000 market cap, then graduates at $35,000 into permanently locked liquidity. You can pair it with HYPE, SOL, USDC or a tokenized stock, and choose a 1–3% trading fee split 50/50 between creator and platform.',
   },
   {
     q: 'Which networks are supported?',

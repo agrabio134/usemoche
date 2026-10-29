@@ -100,6 +100,8 @@ const minShort = `${copyTradingAccess.minimumHolding / 1_000_000}M`;
   .tk__badge { flex: none; display: grid; text-align: center; line-height: 1.2; padding: 5px 8px; border-radius: 9px; font-size: 0.625rem; font-weight: 600; }
   .tk__badge--holder { background: var(--c-tint); color: var(--c-cobalt-press); }
   .tk__badge--holder strong { font-size: 0.75rem; font-weight: 800; }
+  .tk__badge--live { display: inline-flex; align-items: center; gap: 5px; background: var(--c-ok-bg); color: var(--c-ok); font-size: 0.6875rem; font-weight: 800; padding: 6px 9px; }
+  .tk__badge--live::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
   .tk__badge--soon { background: #eef1f6; color: var(--c-ink-2); border: 1px solid var(--c-border); font-size: 0.6875rem; padding: 6px 9px; }
   .tk :global(.tk__chev) { width: 18px; height: 18px; flex: none; color: var(--c-ink-3); transition: transform var(--dur-2) var(--ease), color var(--dur-1); }
   .tk__item:hover :global(.tk__chev) { transform: translateX(3px); color: var(--c-cobalt); }

@@ -66,7 +66,7 @@ export const productStatus: Record<'signal' | 'check' | 'copy' | 'launchpad', Pr
   signal: 'unconfirmed',
   check: 'unconfirmed',
   copy: 'unconfirmed',
-  launchpad: 'coming-soon',
+  launchpad: 'live',
 };
 
 export const formatNumber = (n: number) => n.toLocaleString('en-US');

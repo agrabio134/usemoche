@@ -1,84 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
-import Icon from '../components/Icon.astro';
-import LaunchpadMock from '../components/LaunchpadMock.astro';
-import { links } from '../config/site';
-const tbd = [
-  { k: 'Launch date', icon: 'clock' },
-  { k: 'Fees', icon: 'coins' },
-  { k: 'Launch mechanics', icon: 'activity' },
-  { k: 'Rewards', icon: 'sparkle' },
-];
+import Launchpad from '../launchpad/Launchpad';
 ---
 <Base
   title="Moche Launchpad"
-  description="Moche Launchpad is coming soon: a simple way to create new tokens and discover what others are launching."
+  description="Launch a Solana token with a Meteora bonding curve. Pair it with HYPE, SOL, USDC or a tokenized stock, and graduate into permanently locked liquidity."
   current="launchpad"
 >
-  <section class="page-hero">
-    <div class="container split">
-      <div>
-        <div class="page-hero__meta"><span class="badge badge--soon"><Icon name="clock" /> Coming Soon</span></div>
-        <h1 class="h1">Moche Launchpad</h1>
-        <p class="lead">A simple, friendly place to create new tokens and discover fresh launches, built with the same care as the rest of usemoche.</p>
-        <div class="btn-row">
-          {links.x
-            ? <a href={links.x} class="btn btn--primary" target="_blank" rel="noopener noreferrer">Follow for updates <Icon name="external" /></a>
-            : <a href="/products/" class="btn btn--primary">Explore available tools <Icon name="arrow-right" /></a>}
-        </div>
-      </div>
-      <LaunchpadMock idPrefix="page-lp" />
+  <Launchpad client:only="react">
+    <div slot="fallback" class="lp-loading">
+      <img src="/images/moche-wave-360.webp" width="96" height="95" alt="" />
+      <p>Loading the launchpad…</p>
+      <noscript><p>The launchpad needs JavaScript to connect a wallet and read markets from Solana.</p></noscript>
     </div>
-  </section>
-
-  <section class="section" aria-labelledby="concept-title">
-    <div class="container">
-      <div class="section-head">
-        <h2 id="concept-title" class="h2">The idea</h2>
-        <p class="lead">Two simple parts: create a token in a few fields, then find it alongside everything else that’s new.</p>
-      </div>
-      <div class="concept">
-        <article class="card concept__card">
-          <span class="icon-tile icon-tile--solid"><Icon name="plus" /></span>
-          <h3 class="h3">Create</h3>
-          <p>Give your token a name, ticker, image and short description. Keep it quick, without the jargon.</p>
-        </article>
-        <article class="card concept__card">
-          <span class="icon-tile icon-tile--solid"><Icon name="search" /></span>
-          <h3 class="h3">Discover</h3>
-          <p>Browse new and trending launches in one place, and run <span class="cmd">@usemoche check</span> on anything that catches your eye.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--tint" aria-labelledby="tbd-title">
-    <div class="container split">
-      <div class="section-head" style="margin-bottom:0">
-        <h2 id="tbd-title" class="h2">Not announced yet</h2>
-        <p class="lead">We’d rather tell you nothing than tell you something that changes. These details will be shared when they’re final.</p>
-      </div>
-      <ul role="list" class="tbd">
-        {tbd.map((t) => (
-          <li class="card">
-            <span class="icon-tile"><Icon name={t.icon} /></span>
-            <strong>{t.k}</strong>
-            <span class="badge badge--soon">To be announced</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+  </Launchpad>
 </Base>
 
 <style>
-  .concept { display: grid; gap: var(--s-4); }
-  .concept__card { padding: var(--s-6); display: grid; gap: var(--s-3); align-content: start; }
-  .concept__card p { color: var(--c-ink-2); }
-  @media (min-width: 760px) { .concept { grid-template-columns: 1fr 1fr; gap: var(--s-5); } }
-  .tbd { display: grid; gap: 10px; }
-  .tbd li { display: flex; align-items: center; gap: 14px; padding: 14px 16px; }
-  .tbd .badge { margin-left: auto; }
-  .tbd .icon-tile { width: 40px; height: 40px; border-radius: 12px; }
-  .tbd .icon-tile :global(svg) { width: 20px; height: 20px; }
+  .lp-loading { display: grid; justify-items: center; gap: 10px; padding: 96px 16px; color: var(--c-ink-3); text-align: center; }
+  .lp-loading img { width: 96px; height: auto; }
 </style>

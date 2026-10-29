@@ -68,7 +68,7 @@ const desktopLinks = [
             <a href={item.href} aria-current={item.id === current ? 'page' : undefined} data-sheet-close>
               <span class="menu__icon"><Icon name={item.icon} /></span>
               {item.label}
-              {item.id === 'launchpad' && <span class="badge badge--soon">Coming Soon</span>}
+              {item.id === 'launchpad' && <span class="badge badge--ok">New</span>}
               <Icon name="chevron-right" class="menu__chev" />
             </a>
           </li>
