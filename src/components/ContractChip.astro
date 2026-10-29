@@ -1,0 +1,47 @@
+---
+/** Official $MOCHE contract address with a copy button. Renders nothing until the address is set in config. */
+import CopyButton from './CopyButton.astro';
+import { brand, tokenInfo } from '../config/site';
+interface Props { id: string; class?: string }
+const { id, class: cls } = Astro.props;
+const ca = tokenInfo.contractAddress;
+const short = ca ? `${ca.slice(0, 6)}…${ca.slice(-6)}` : '';
+---
+{ca && (
+  <div class:list={['ca', cls]}>
+    <span class="ca__label">CA</span>
+    <code class="ca__addr" id={id} title={ca}>
+      <span class="ca__full">{ca}</span>
+      <span class="ca__short" aria-hidden="true">{short}</span>
+    </code>
+    <CopyButton text={ca} label="Copy CA" variant="solid" targetId={id} ariaLabel={`Copy ${brand.token} contract address`} class="ca__btn" />
+  </div>
+)}
+
+<style>
+  .ca {
+    display: flex; align-items: center; gap: 10px;
+    min-height: 52px; padding: 6px 6px 6px 8px;
+    background: #fff; border: 1px solid var(--c-border); border-radius: var(--r-lg);
+    box-shadow: var(--sh-2);
+    max-width: 100%;
+  }
+  .ca__label {
+    flex: none; display: grid; place-items: center;
+    height: 32px; padding: 0 10px; border-radius: 10px;
+    background: var(--c-navy); color: #fff;
+    font-size: var(--fs-xs); font-weight: 800; letter-spacing: 0.06em;
+  }
+  .ca__addr {
+    flex: 1; min-width: 0;
+    font-family: var(--font-mono); font-size: 0.875rem; font-weight: 600; color: var(--c-navy);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .ca__short { display: none; }
+  .ca :global(.ca__btn) { flex: none; min-height: 40px; padding: 0 14px; }
+  /* Narrow screens: show a shortened address (the button still copies the full one) */
+  @media (max-width: 519.98px) {
+    .ca__full { display: none; }
+    .ca__short { display: inline; }
+  }
+</style>

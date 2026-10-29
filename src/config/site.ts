@@ -49,7 +49,7 @@ export const links: Record<'x' | 'docs' | 'support' | 'terms' | 'privacy', Maybe
 /** Token facts that are not confirmed yet. */
 export const tokenInfo = {
   /** Official contract address. Keep `null` until it is published by the team. */
-  contractAddress: null as string | null,
+  contractAddress: '2C5DqjLHvJbxdf5c2o99KB8PScyt3XUtykmXHYuGmeme' as string | null,
   /** Network the token lives on. `null` = not announced on this site yet. */
   network: null as string | null,
 };

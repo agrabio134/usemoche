@@ -1,7 +1,8 @@
 ---
 import Icon from '../Icon.astro';
 import CopyButton from '../CopyButton.astro';
-import { brand } from '../../config/site';
+import ContractChip from '../ContractChip.astro';
+import { brand, tokenInfo } from '../../config/site';
 import { previews } from '../../content/site-content';
 
 const s = previews.signal;
@@ -21,7 +22,7 @@ const checkRows = c.rows.map((r) => ({
 }));
 ---
 <section class="hero" aria-labelledby="hero-title">
-  <div class="container hero__wrap">
+  <div class:list={["container", "hero__wrap", { "has-ca": !!tokenInfo.contractAddress }]}>
     <div class="hero__copy">
       <h1 id="hero-title" class="hero__h1">
         <span class="hero__l1">Meet <span class="accent">Moche<span class="tight">.</span></span></span>
@@ -32,6 +33,7 @@ const checkRows = c.rows.map((r) => ({
         <a href="/products/" class="btn btn--primary">Explore Products <Icon name="arrow-right" /></a>
         <a href="#how-it-works" class="btn btn--secondary">How It Works</a>
       </div>
+      <ContractChip id="ca-desktop" class="hero__ca hero__ca--d" />
     </div>
 
     <!-- Different artwork per breakpoint: a tight "peek" crop on phones, the full figure on desktop -->
@@ -89,6 +91,7 @@ const checkRows = c.rows.map((r) => ({
         </button>
       </li>
     </ul>
+    <ContractChip id="ca-mobile" class="hero__ca hero__ca--m" />
 
     <!-- Desktop: interactive command preview -->
     <div class="demo" data-tabs>
@@ -212,6 +215,11 @@ const checkRows = c.rows.map((r) => ({
 
   .demo { display: none; }
 
+  /* Contract address: under the command rows on mobile, under the buttons on desktop */
+  .hero__wrap :global(.hero__ca--d) { display: none; }
+  .hero__wrap :global(.hero__ca--m) { position: relative; z-index: 2; margin-top: 10px; }
+  .hero__wrap.has-ca .hero__mascot { bottom: 178px; } /* rows 130 + gap 10 + CA 52 - 14 overlap */
+
   @media (min-width: 560px) {
     .hero__btns { display: flex; }
     .hero__l2, .hero__lead { max-width: 62%; }
@@ -241,6 +249,8 @@ const checkRows = c.rows.map((r) => ({
     }
     .hero__whoosh { display: block; position: absolute; left: 13%; top: 4%; width: 13%; color: var(--c-cobalt); }
     .cmdrows { display: none; }
+    .hero__wrap :global(.hero__ca--m) { display: none; }
+    .hero__wrap :global(.hero__ca--d) { display: flex; margin-top: 18px; max-width: 600px; }
 
     .demo {
       grid-column: 1 / -1; grid-row: 2;

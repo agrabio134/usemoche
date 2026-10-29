@@ -7,8 +7,9 @@ interface Props {
   targetId?: string;
   tabLinked?: boolean;
   class?: string;
+  ariaLabel?: string;
 }
-const { text, label = 'Copy', variant = 'soft', targetId, tabLinked = false, class: cls } = Astro.props;
+const { text, label = 'Copy', variant = 'soft', targetId, tabLinked = false, class: cls, ariaLabel } = Astro.props;
 ---
 <button
   type="button"
@@ -16,7 +17,7 @@ const { text, label = 'Copy', variant = 'soft', targetId, tabLinked = false, cla
   data-copy={text}
   data-copy-target={targetId}
   data-tab-copy={tabLinked ? '' : undefined}
-  aria-label={`Copy command ${text}`}
+  aria-label={ariaLabel ?? `Copy command ${text}`}
 >
   <span class="copy-btn__icons" aria-hidden="true">
     <Icon name="copy" class="i-copy" />
