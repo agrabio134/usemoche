@@ -35,28 +35,42 @@ const checkRows = c.rows.map((r) => ({
     </div>
 
     <!-- Different artwork per breakpoint: a tight "peek" crop on phones, the full figure on desktop -->
-    <picture class="hero__mascot" aria-hidden="true">
-      <source
-        media="(min-width: 900px)"
+    <div class="hero__mascot" aria-hidden="true">
+      <picture class="hero__pic">
+        <source
+          media="(min-width: 900px)"
+          srcset="/images/moche-rest-d-560.webp 560w, /images/moche-rest-d-840.webp 840w"
+          sizes="480px"
+          width="560"
+          height="347"
+        />
+        <img
+          src="/images/moche-peek-m-400.webp"
+          srcset="/images/moche-peek-m-240.webp 240w, /images/moche-peek-m-400.webp 400w"
+          sizes="200px"
+          width="400"
+          height="301"
+          alt=""
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
+      <!-- Desktop only: the paw drawn again in front of the card so Moche appears to hold it -->
+      <img
+        class="hero__paw"
+        src="/images/moche-rest-d-560.webp"
         srcset="/images/moche-rest-d-560.webp 560w, /images/moche-rest-d-840.webp 840w"
         sizes="480px"
         width="560"
         height="347"
-      />
-      <img
-        src="/images/moche-peek-m-400.webp"
-        srcset="/images/moche-peek-m-240.webp 240w, /images/moche-peek-m-400.webp 400w"
-        sizes="200px"
-        width="400"
-        height="301"
         alt=""
-        fetchpriority="high"
+        loading="lazy"
         decoding="async"
       />
-      <svg class="hero__whoosh" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true">
+      <svg class="hero__whoosh" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round">
         <path d="M22 6 L27 17" /><path d="M6 21 L17 25" />
       </svg>
-    </picture>
+    </div>
 
     <!-- Mobile: quick command rows (open a sheet with copy + preview) -->
     <ul role="list" class="cmdrows">
@@ -176,7 +190,8 @@ const checkRows = c.rows.map((r) => ({
     width: min(48vw, 220px);
   }
   .hero__mascot img { width: 100%; height: auto; }
-  .hero__whoosh { display: none; }
+  .hero__whoosh, .hero__paw { display: none; }
+  .hero__pic { display: block; }
 
   .cmdrows { position: relative; z-index: 2; display: grid; gap: 10px; margin-top: 22px; }
   .cmdrow {
@@ -212,8 +227,15 @@ const checkRows = c.rows.map((r) => ({
       grid-column: 2; grid-row: 1;
       justify-self: end; align-self: end;
       width: min(480px, 40vw);
-      margin: 0 36px -1px 0;        /* bottom edge sits exactly on the card */
-      z-index: 3;
+      margin: 0 36px -24px 0;       /* bottom 24px tucks behind the card's top edge */
+      z-index: auto;                 /* no stacking context: body sits under the card, paw over it */
+    }
+    .hero__pic { position: relative; z-index: 1; }
+    .hero__paw {
+      display: block; position: absolute; inset: 0; z-index: 3;
+      width: 100%; height: auto;
+      clip-path: ellipse(14.8% 12.6% at 14.6% 87.6%);
+      filter: drop-shadow(0 6px 6px rgb(16 27 63 / 0.18));
     }
     .hero__whoosh { display: block; position: absolute; left: 13%; top: 4%; width: 13%; color: var(--c-cobalt); }
     .cmdrows { display: none; }
