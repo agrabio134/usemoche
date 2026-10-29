@@ -332,3 +332,17 @@
 .lp-wallet img { width: 32px; height: 32px; border-radius: 8px; }
 .lp-wallet svg { margin-left: auto; color: var(--c-ink-3); }
 @media (min-width: 640px) { .lp-wallets[open] { align-items: center; } .lp-wallets__panel { border-radius: var(--r-xl); } }
+
+/* ---------- Image picker ---------- */
+.lp-drop { position: relative; display: flex; align-items: center; gap: 14px; padding: 12px; border-radius: var(--r-lg); background: #fff; border: 1.5px dashed #b9c8e0; cursor: pointer; transition: border-color var(--dur-1), background-color var(--dur-1); }
+.lp-drop:hover { border-color: var(--c-cobalt); background: var(--c-pale); }
+.lp-drop:focus-within { border-color: var(--c-cobalt); box-shadow: 0 0 0 3px rgb(36 85 245 / 0.15); }
+.lp-drop.is-off { cursor: pointer; }
+.lp-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.lp-drop input:disabled { cursor: not-allowed; }
+.lp-drop__img { width: 72px; height: 72px; flex: none; border-radius: 18px; display: grid; place-items: center; overflow: hidden; background: var(--c-tint); color: var(--c-cobalt); }
+.lp-drop__img img { width: 100%; height: 100%; object-fit: cover; }
+.lp-drop__text { display: grid; gap: 2px; min-width: 0; }
+.lp-drop__text strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lp-drop__text small { font-size: var(--fs-xs); color: var(--c-ink-3); }
+.lp-thumb { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; }

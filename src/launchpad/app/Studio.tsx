@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, ArrowRight, ArrowLeft, Search, Rocket, Wallet, ShieldCheck, Check, ExternalLink, LockKeyhole, CircleHelp, ChevronRight, Upload, Download, ChartNoAxesCombined } from 'lucide-react';
+import { ArrowUpRight, ArrowRight, ArrowLeft, Search, Rocket, Wallet, ShieldCheck, Check, LockKeyhole, CircleHelp, ChevronRight, Upload, ChartNoAxesCombined } from 'lucide-react';
 import { CORE_ASSETS, HYPE, type Asset } from '../lib/constants';
 import { OPENING_MARKET_CAP_USD, GRADUATION_MARKET_CAP_USD } from '../lib/launch-policy';
 import { launchSchema, safeUrl, fromAtomic } from '../lib/validation';
@@ -57,23 +57,7 @@ export function LaunchStudio({ assets, session, connect, action, busy, setStatus
   let threshold = '—';
   try { if (decimals !== null && launchSchema.safeParse(input).success) threshold = fromAtomic(curveFor(input, decimals).migrationQuoteThreshold, decimals); } catch {}
 
-  function downloadMetadata() {
-    const content = { name, symbol, description, image: imageUrl, external_url: website, properties: { category: 'image', launchpad: 'usemoche', files: imageUrl ? [{ uri: imageUrl, type: 'image/png' }] : [] } };
-    const url = URL.createObjectURL(new Blob([JSON.stringify(content, null, 2)], { type: 'application/json' }));
-    const a = document.createElement('a'); a.href = url; a.download = `${symbol || 'token'}-metadata.json`; a.click(); URL.revokeObjectURL(url);
-  }
 
-  async function verifyMetadata() {
-    setError(''); setPrepared(false);
-    try {
-      const r = await fetch(safeUrl(uri), { signal: AbortSignal.timeout(12000) });
-      if (!r.ok) throw new Error('Metadata URL did not return a valid response.');
-      const data = await r.json();
-      if (data.name !== name || data.symbol !== symbol) throw new Error('Metadata name and symbol must match your token.');
-      if (!data.image) throw new Error('Metadata must include an image URL.');
-      setImageUrl(safeUrl(data.image)); setPrepared(true);
-    } catch (e) { setError('Metadata check: ' + message(e)); }
-  }
 
   const connectedWallet = useRef(session); connectedWallet.current = session;
   async function upload(selectedFile: File) {
@@ -103,8 +87,8 @@ export function LaunchStudio({ assets, session, connect, action, busy, setStatus
     try {
       if (step === 0) {
         if (!name.trim() || !/^[A-Z0-9]{2,10}$/.test(symbol)) throw new Error('Enter a token name and a 2–10 character ticker.');
-        if (file && uploadEnabled && !prepared) { if (!session) { queueUpload(file); return; } if (!(await upload(file))) return; setStep(1); return; }
-        if (!uri) throw new Error(uploadEnabled ? 'Choose a token image. Its metadata is created automatically.' : 'Provide a hosted metadata JSON URI. You can download a template below.');
+        if (!file && !prepared) throw new Error('Upload a token image to continue.');
+        if (!prepared) { if (!session) { connect(); return; } if (!uploadEnabled) throw new Error('Image upload is temporarily unavailable. Please try again shortly.'); if (!(await upload(file!))) return; setStep(1); return; }
         safeUrl(uri);
       }
       if (step === 1) { await mintInfo(asset.mint); if (asset.halted) throw new Error('The issuer has halted this asset.'); }
@@ -146,35 +130,40 @@ export function LaunchStudio({ assets, session, connect, action, busy, setStatus
               </div>
               <Field label="Description"><textarea maxLength={1000} value={description} onChange={(e) => { setDescription(e.target.value); setPrepared(false); }} placeholder="What is it about?" rows={3} /></Field>
               <Field label="Website (optional)"><input type="url" value={website} onChange={(e) => { setWebsite(e.target.value); setPrepared(false); }} placeholder="https://" /></Field>
-              {uploadEnabled && (
-                <div className="lp-upload">
-                  <label className="lp-upload__box">
-                    <Upload size={22} />
-                    <span><strong>Token image</strong><small>PNG, JPG or WebP · up to 2 MB</small></span>
-                    <input type="file" aria-label="Token image" disabled={!session || busy} accept="image/png,image/jpeg,image/webp" onChange={(e) => {
-                      if (!session) { e.target.value = ''; connect(); return; }
-                      const f = e.target.files?.[0]; if (!f) return;
-                      if (f.size > 2 * 1024 * 1024 || !['image/png', 'image/jpeg', 'image/webp'].includes(f.type)) { setError('Choose a PNG, JPG or WebP image under 2 MB.'); e.target.value = ''; return; }
-                      setError(''); setFile(f); setPrepared(false); setUri('');
-                      if (localImage) URL.revokeObjectURL(localImage);
-                      setLocalImage(URL.createObjectURL(f)); queueUpload(f);
-                    }} />
-                  </label>
-                  <button className="lp-btn lp-btn--secondary lp-btn--sm" disabled={busy || (!!session && (!file || !identityReady || prepared))} onClick={() => { if (!session) connect(); else if (file) queueUpload(file); }}>
-                    {busy ? 'Uploading…' : prepared ? 'Uploaded' : !session ? 'Connect to upload' : uploadQueued ? 'Upload queued…' : 'Retry upload'}{prepared ? <Check size={15} /> : <ArrowUpRight size={15} />}
-                  </button>
-                  <p className="lp-help">{!session ? 'Connect your wallet to upload an image. No signature is needed.' : uploadQueued && !identityReady ? 'Image selected. Finish the name and ticker and it uploads automatically.' : 'We store the image and token metadata on IPFS for you.'}</p>
-                  {prepared && file && <p className="lp-ok"><Check size={15} />Saved to IPFS · ready <a href={safeHref(uri)} target="_blank" rel="noreferrer">View metadata <ExternalLink size={13} /></a></p>}
-                </div>
-              )}
-              <Field label={uploadEnabled ? 'Metadata URI (filled after upload)' : 'Hosted metadata JSON URI'} hint="Must contain the same name and symbol, and an image URL. Permanent after launch.">
-                <input value={uri} onChange={(e) => { setUri(e.target.value); setPrepared(false); }} maxLength={100} placeholder={uploadEnabled ? 'Filled automatically after upload' : 'ipfs://… or https://…/metadata.json'} />
-              </Field>
-              <div className="lp-row">
-                <button className="lp-btn lp-btn--ghost lp-btn--sm" onClick={downloadMetadata}><Download size={15} />Metadata template</button>
-                <button className="lp-btn lp-btn--ghost lp-btn--sm" onClick={verifyMetadata}><ShieldCheck size={15} />{prepared ? 'Metadata verified' : 'Verify metadata'}</button>
+              <div className="lp-upload">
+                <label className={`lp-drop ${!session || !uploadEnabled ? 'is-off' : ''}`}>
+                  <span className="lp-drop__img">
+                    {localImage || imageUrl ? <img src={localImage || safeHref(imageUrl)} alt="Selected token image" /> : <Upload size={26} />}
+                  </span>
+                  <span className="lp-drop__text">
+                    <strong>{file ? file.name : 'Upload token image'}</strong>
+                    <small>PNG, JPG or WebP · up to 2 MB · square works best</small>
+                  </span>
+                  <input type="file" aria-label="Token image" disabled={!uploadEnabled || busy} accept="image/png,image/jpeg,image/webp" onClick={(e) => { if (!session) { e.preventDefault(); connect(); } }} onChange={(e) => {
+                    const f = e.target.files?.[0]; if (!f) return;
+                    if (f.size > 2 * 1024 * 1024 || !['image/png', 'image/jpeg', 'image/webp'].includes(f.type)) { setError('Choose a PNG, JPG or WebP image under 2 MB.'); e.target.value = ''; return; }
+                    setError(''); setFile(f); setPrepared(false); setUri(''); setImageUrl('');
+                    if (localImage) URL.revokeObjectURL(localImage);
+                    setLocalImage(URL.createObjectURL(f)); queueUpload(f);
+                  }} />
+                </label>
+                {!uploadEnabled ? (
+                  <p className="lp-help">Image upload is temporarily unavailable. Please try again shortly.</p>
+                ) : prepared ? (
+                  <p className="lp-ok"><Check size={15} />Image saved · token details ready</p>
+                ) : (
+                  <div className="lp-row">
+                    <p className="lp-help" style={{ flex: 1 }}>
+                      {!session ? 'Connect your wallet to upload. No signature needed.'
+                        : busy ? 'Uploading your image…'
+                        : uploadQueued && !identityReady ? 'Image selected. It uploads once the name and ticker are filled in.'
+                        : file ? 'Upload didn’t finish. Try again.' : 'Your image and token details are stored on IPFS automatically.'}
+                    </p>
+                    {session && file && !uploadQueued && !busy && <button className="lp-btn lp-btn--secondary lp-btn--sm" onClick={() => queueUpload(file)}>Retry upload <ArrowUpRight size={15} /></button>}
+                    {!session && <button className="lp-btn lp-btn--secondary lp-btn--sm" onClick={connect}>Connect wallet <Wallet size={15} /></button>}
+                  </div>
+                )}
               </div>
-              {!uploadEnabled && <p className="lp-help">Image uploads aren’t switched on for this site yet. Host your metadata JSON on IPFS or HTTPS and paste its URI.</p>}
             </div>
           )}
 
@@ -240,11 +229,10 @@ export function LaunchStudio({ assets, session, connect, action, busy, setStatus
                 <div><dt>Trading fee</dt><dd>{shield ? '10% → ' : ''}{fee / 100}%{dynamic ? ' + dynamic' : ''}</dd></div>
                 <div><dt>Creator / platform</dt><dd>50% / 50%</dd></div>
                 <div><dt>LP lock</dt><dd>100%, permanent</dd></div>
-                <div><dt>Metadata</dt><dd><a href={safeHref(uri)} target="_blank" rel="noreferrer">View JSON <ExternalLink size={13} /></a></dd></div>
+                <div><dt>Image</dt><dd>{localImage || imageUrl ? <img className="lp-thumb" src={localImage || safeHref(imageUrl)} alt="" /> : '—'}</dd></div>
               </dl>
               <div className="lp-info"><CircleHelp size={19} /><p>Network fees and account rent are paid in SOL. The launch either fully succeeds or fully fails; a failed transaction can still cost a network fee.</p></div>
               <label className="lp-check"><input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} /><span>I’ve reviewed the settings, metadata, fees and permanent liquidity lock.{asset.category === 'stock' ? ' I’m eligible under the stock issuer’s terms.' : ''}</span></label>
-              {!prepared && <button className="lp-btn lp-btn--secondary" onClick={verifyMetadata}>Verify metadata first <ShieldCheck size={16} /></button>}
             </div>
           )}
 
