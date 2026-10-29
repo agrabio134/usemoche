@@ -1,3 +1,4 @@
+import { serverEnv } from './env';
 import { MAINNET_GENESIS } from '../lib/constants';
 // Never loads or uses a deployment private key. Only relays a narrow set of RPC calls.
 const methods=new Set(['getGenesisHash','getAccountInfo','getMultipleAccounts','getProgramAccounts','getLatestBlockhash','getBlockHeight','getBalance','getSlot','getBlockTime','getEpochInfo','getMinimumBalanceForRentExemption','getFeeForMessage','getTokenAccountsByOwner','getTokenAccountBalance','getTokenSupply','getSignatureStatuses','getSignaturesForAddress','getTransaction','simulateTransaction','sendTransaction']);
@@ -18,7 +19,7 @@ export default async function handler(req:any,res:any){
    const allowed=['dbcij3LWUppWqq96dh6gJWwBifmcGfLSB5D4DuSMaqN','cpamdpZCGKUy5JxQXB4dcpGPiikHawvSWAd6mEn1sGG'];
    if(!allowed.includes(body.params?.[0])||!body.params?.[1]?.filters?.some((f:any)=>f.memcmp))return res.status(400).json({error:'Filtered launchpad program requests only'});
  }
- const endpoint=process.env.MAINNET_RPC_URL||'https://api.mainnet-beta.solana.com';
+ const endpoint=serverEnv('MAINNET_RPC_URL')||'https://api.mainnet-beta.solana.com';
  const rpc=async(payload:unknown)=>{
   const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:AbortSignal.timeout(20000)});
   if(!response.ok)throw new Error('RPC unavailable');return response.json();

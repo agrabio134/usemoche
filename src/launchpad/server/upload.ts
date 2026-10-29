@@ -1,3 +1,4 @@
+import { serverEnv } from './env';
 import bs58 from 'bs58';
 import { z } from 'zod';
 import { LAUNCHPAD_TAG } from '../lib/constants';
@@ -24,7 +25,7 @@ async function pin(url:string,init:RequestInit){
 export default async function handler(req:any,res:any){
  res.setHeader('Cache-Control','no-store');
  if(req.method!=='POST')return res.status(405).json({error:'POST required'});
- if(!process.env.PINATA_JWT)return res.status(503).json({error:'Image storage is not configured. Please try again later.'});
+ if(!serverEnv('PINATA_JWT'))return res.status(503).json({error:'Image storage is not configured. Please try again later.'});
  try{
   if(!req.headers.origin||new URL(req.headers.origin).host!==req.headers.host)return res.status(403).json({error:'Origin rejected'});
   const body=typeof req.body==='string'?JSON.parse(req.body):req.body;
@@ -37,7 +38,7 @@ export default async function handler(req:any,res:any){
   if(!valid)throw new Error('Invalid image format. Choose PNG, JPG or WebP.');
   const ip=String(req.headers['x-forwarded-for']||'local').split(',')[0].trim();
   if(!takeBudget(`ip:${ip}`,20)||!takeBudget(`wallet:${d.address}`,10))return res.status(429).json({error:'Upload limit reached. Please try again in an hour.'});
-  const headers={Authorization:`Bearer ${process.env.PINATA_JWT}`};
+  const headers={Authorization:`Bearer ${serverEnv('PINATA_JWT')}`};
   const form=new FormData();form.append('file',new Blob([image],{type:d.type}),`${d.symbol}.${d.type==='image/jpeg'?'jpg':d.type.split('/')[1]}`);form.append('pinataOptions',JSON.stringify({cidVersion:0}));
   const artwork=await pin('https://api.pinata.cloud/pinning/pinFileToIPFS',{method:'POST',headers,body:form});
   const imageUrl=`https://ipfs.io/ipfs/${artwork}`;
