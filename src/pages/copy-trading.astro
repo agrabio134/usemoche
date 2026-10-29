@@ -1,0 +1,218 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import HolderAccess from '../components/HolderAccess.astro';
+import MocheEmpty from '../components/MocheEmpty.astro';
+import FAQ from '../components/FAQ.astro';
+import { brand, copyTradingAccess, formatNumber } from '../config/site';
+import { faq } from '../content/site-content';
+const min = formatNumber(copyTradingAccess.minimumHolding);
+const appUrl = copyTradingAccess.appUrl;
+const ctFaq = [
+  faq[4],
+  { q: 'What’s the difference between following and copying?', a: 'Following a wallet only shows you its activity. Copying is a separate step: you have to explicitly authorize automated trades and set your own spending limits. You can follow without ever copying.' },
+  { q: 'Will you ever ask for my seed phrase or private key?', a: 'Never. usemoche will never ask for your seed phrase or private key, on this site, in DMs or anywhere else. Anyone who asks is not us.' },
+  { q: 'Can I stop copying at any time?', a: 'Yes. The interface is designed with pause and stop controls so you stay in control. Spending limits you set cap how much can be used.' },
+  { q: 'Do good past results mean I’ll make money?', a: 'No. A wallet’s past performance doesn’t guarantee future results. Copy trading can lose money, so only use amounts you can afford to lose.' },
+];
+---
+<Base
+  title="KOL Copy Trading"
+  description={`Follow selected KOL and whale wallets and copy their trades within limits you set. Free for holders of at least ${min} $MOCHE.`}
+  current="copy"
+>
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero__meta">
+        <span class="badge badge--holder"><Icon name="coins" /> Hold 10M MOCHE for free access</span>
+      </div>
+      <h1 class="h1">KOL Wallet Copy Trading</h1>
+      <p class="lead">Follow the KOL and whale wallets you choose, watch what they do, and copy their trades only if you decide to, within limits you set.</p>
+      <div class="btn-row">
+        {appUrl
+          ? <a href={appUrl} class="btn btn--primary" rel="noopener">Open Copy Trading <Icon name="arrow-right" /></a>
+          : <a href="#preview" class="btn btn--primary">See the interface preview <Icon name="arrow-right" /></a>}
+        <a href="#access" class="btn btn--secondary">Access requirement</a>
+      </div>
+      {!appUrl && <p class="small muted status-line"><span class="dot" style="color:var(--c-warn-dot)"></span> The copy trading app isn’t connected to this site yet. What you see below is a preview.</p>}
+    </div>
+  </section>
+
+  <section class="section" id="preview" aria-labelledby="ct-how">
+    <div class="container split">
+      <div>
+        <div class="section-head">
+          <h2 id="ct-how" class="h2">How it works</h2>
+          <p class="lead">Watching and copying are separate steps, so nothing trades unless you say so.</p>
+        </div>
+        <ol role="list" class="flow">
+          <li><span class="icon-tile"><Icon name="search" /></span><div><h3 class="h3">Discover wallets</h3><p>Browse or select KOL and whale wallets to look at.</p></div></li>
+          <li><span class="icon-tile"><Icon name="eye" /></span><div><h3 class="h3">Follow to watch activity</h3><p>See a wallet’s activity. Following never trades for you.</p></div></li>
+          <li><span class="icon-tile"><Icon name="sliders" /></span><div><h3 class="h3">Optionally authorize copying</h3><p>A separate, explicit approval, with spending limits you define.</p></div></li>
+          <li><span class="icon-tile"><Icon name="pause" /></span><div><h3 class="h3">Pause or stop anytime</h3><p>Stay in control of what’s copied and when.</p></div></li>
+        </ol>
+      </div>
+
+      <div class="ui card" aria-label="Copy trading interface preview">
+        <div class="ui__bar">
+          <span class="badge badge--preview">Interface preview · nothing is saved or sent</span>
+        </div>
+
+        <div class="ui__wallet">
+          <span class="ui__av" aria-hidden="true"><Icon name="wallet" /></span>
+          <div>
+            <strong>Example wallet</strong>
+            <span>Wallet details appear here once connected</span>
+          </div>
+        </div>
+
+        <div class="seg" role="group" aria-label="Mode" data-segment="ct-mode">
+          <button type="button" data-value="follow" aria-pressed="true"><Icon name="eye" size={18} /> Follow</button>
+          <button type="button" data-value="copy" aria-pressed="false"><Icon name="sliders" size={18} /> Copy trades</button>
+        </div>
+
+        <div data-segment-panel="ct-mode" data-value="follow" class="ui__panel">
+          <p class="ui__explain"><Icon name="eye" /> <span><strong>Follow only.</strong> You’ll see this wallet’s activity. No trades are made and no authorization is needed.</span></p>
+          <div class="ui__activity">
+            <p class="ui__h">Activity</p>
+            <MocheEmpty title="No activity to show" text="A followed wallet’s activity will appear here when the service is live." />
+          </div>
+        </div>
+
+        <div data-segment-panel="ct-mode" data-value="copy" class="ui__panel" hidden>
+          <p class="ui__explain ui__explain--warn"><Icon name="lock" /> <span><strong>Copying requires a separate authorization</strong> from your own wallet. You’ll never be asked for a seed phrase or private key.</span></p>
+          <fieldset class="limits">
+            <legend class="ui__h">Your spending limits</legend>
+            <label>
+              <span>Max per trade</span>
+              <span class="inp"><input type="number" inputmode="decimal" min="0" step="any" placeholder="0.00" /><em>amount</em></span>
+            </label>
+            <label>
+              <span>Daily limit</span>
+              <span class="inp"><input type="number" inputmode="decimal" min="0" step="any" placeholder="0.00" /><em>amount</em></span>
+            </label>
+          </fieldset>
+          <div class="ctrl">
+            <p class="ui__h">Controls</p>
+            <p class="ctrl__state" aria-live="polite">Preview status: <strong data-ct-status>Not started</strong></p>
+            <div class="ctrl__btns">
+              <button type="button" class="btn btn--secondary btn--sm" data-ct-action="pause"><Icon name="pause" /> Pause</button>
+              <button type="button" class="btn btn--secondary btn--sm ctrl__stop" data-ct-action="stop"><Icon name="stop" /> Stop</button>
+            </div>
+            <p class="small muted">These controls only change this preview. Nothing is connected.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint" aria-labelledby="fvc-title">
+    <div class="container">
+      <div class="section-head">
+        <h2 id="fvc-title" class="h2">Following is not authorizing</h2>
+        <p class="lead">Two clearly separate actions, so you always know what you’ve agreed to.</p>
+      </div>
+      <div class="fvc">
+        <article class="card fvc__card">
+          <span class="icon-tile"><Icon name="eye" /></span>
+          <h3 class="h3">Follow a wallet</h3>
+          <ul role="list" class="check-list">
+            <li><Icon name="check" /> See the wallet’s activity</li>
+            <li><Icon name="check" /> No trades are made for you</li>
+            <li><Icon name="check" /> No wallet authorization needed</li>
+          </ul>
+        </article>
+        <article class="card fvc__card fvc__card--copy">
+          <span class="icon-tile icon-tile--solid"><Icon name="sliders" /></span>
+          <h3 class="h3">Copy a wallet’s trades</h3>
+          <ul role="list" class="check-list">
+            <li><Icon name="check" /> Explicit authorization from your wallet</li>
+            <li><Icon name="check" /> Spending limits you define</li>
+            <li><Icon name="check" /> Pause or stop at any time</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div id="access"><HolderAccess showLink={false} /></div>
+
+  <section class="section safety-wrap" aria-labelledby="safety-title">
+    <div class="container">
+      <h2 id="safety-title" class="h2">Built to keep you in control</h2>
+      <ul role="list" class="safety">
+        <li class="card"><Icon name="key" /><div><h3 class="h3">No seed phrases. Ever.</h3><p>We will never ask for your seed phrase or private key. Anyone who does is not usemoche.</p></div></li>
+        <li class="card"><Icon name="sliders" /><div><h3 class="h3">Your limits</h3><p>You decide how much can be spent, per trade and per day.</p></div></li>
+        <li class="card"><Icon name="alert" /><div><h3 class="h3">No promises</h3><p>Past results from any wallet don’t guarantee future returns. Copy trading can lose money.</p></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <FAQ items={ctFaq} title="Copy trading questions" id="ct-faq" />
+</Base>
+
+<script>
+  const status = document.querySelector<HTMLElement>('[data-ct-status]');
+  const pause = document.querySelector<HTMLButtonElement>('[data-ct-action="pause"]');
+  const stop = document.querySelector<HTMLButtonElement>('[data-ct-action="stop"]');
+  let state: 'idle' | 'paused' | 'stopped' = 'idle';
+  const render = () => {
+    if (!status || !pause) return;
+    status.textContent = state === 'paused' ? 'Paused' : state === 'stopped' ? 'Stopped' : 'Not started';
+    pause.innerHTML = state === 'paused'
+      ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5.5v13a1 1 0 0 0 1.5.9l10.4-6.5a1 1 0 0 0 0-1.8L8.5 4.6A1 1 0 0 0 7 5.5Z"/></svg> Resume'
+      : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6.5" y="5" width="3.5" height="14" rx="1"/><rect x="14" y="5" width="3.5" height="14" rx="1"/></svg> Pause';
+    pause.disabled = state === 'stopped';
+  };
+  pause?.addEventListener('click', () => { state = state === 'paused' ? 'idle' : 'paused'; render(); });
+  stop?.addEventListener('click', () => { state = state === 'stopped' ? 'idle' : 'stopped'; if (stop) stop.lastChild!.textContent = state === 'stopped' ? ' Reset' : ' Stop'; render(); });
+</script>
+
+<style>
+  .status-line { display: flex; align-items: center; gap: 8px; margin-top: var(--s-4); }
+  .flow { display: grid; gap: var(--s-5); }
+  .flow li { display: flex; gap: 16px; align-items: flex-start; }
+  .flow p { color: var(--c-ink-2); margin-top: 2px; }
+
+  .ui { padding: var(--s-4); box-shadow: var(--sh-3); border-radius: var(--r-xl); display: grid; gap: var(--s-4); }
+  .ui__bar { display: flex; }
+  .ui__wallet { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--r-md); background: var(--c-surface-2); border: 1px solid var(--c-border); }
+  .ui__wallet div { display: grid; line-height: 1.35; }
+  .ui__wallet span:not(.ui__av) { font-size: var(--fs-xs); color: var(--c-ink-3); }
+  .ui__av { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--c-tint); color: var(--c-cobalt); flex: none; }
+  .ui__av :global(svg) { width: 20px; height: 20px; }
+  .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: var(--r-md); background: var(--c-surface-2); border: 1px solid var(--c-border); }
+  .seg button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; border-radius: 11px; font-weight: 700; font-size: var(--fs-sm); color: var(--c-ink-2); }
+  .seg button[aria-pressed='true'] { background: #fff; color: var(--c-cobalt); box-shadow: var(--sh-2); }
+  .ui__panel { display: grid; gap: var(--s-4); }
+  .ui__explain { display: flex; gap: 10px; align-items: flex-start; font-size: var(--fs-sm); color: var(--c-ink-2); line-height: 1.5; }
+  .ui__explain :global(svg) { width: 18px; height: 18px; color: var(--c-cobalt); flex: none; margin-top: 2px; }
+  .ui__explain strong { color: var(--c-ink); }
+  .ui__explain--warn { padding: 12px; border-radius: var(--r-md); background: var(--c-warn-bg); }
+  .ui__explain--warn :global(svg) { color: var(--c-warn); }
+  .ui__h { font-size: var(--fs-xs); font-weight: 700; color: var(--c-ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .ui__activity { border: 1px solid var(--c-border); border-radius: var(--r-md); padding: 12px; }
+  .limits { border: 0; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-width: 0; }
+  .limits legend { margin-bottom: 8px; }
+  .limits label { display: grid; gap: 4px; font-size: var(--fs-sm); font-weight: 600; min-width: 0; }
+  .inp { display: flex; align-items: center; border: 1px solid var(--c-border); border-radius: var(--r-sm); background: #fff; padding-right: 10px; }
+  .inp:focus-within { border-color: var(--c-cobalt); box-shadow: 0 0 0 3px rgb(36 85 245 / 0.15); }
+  .inp input { border: 0; outline: 0; background: transparent; height: 44px; padding: 0 12px; width: 100%; min-width: 0; }
+  .inp em { font-style: normal; font-size: var(--fs-xs); color: var(--c-ink-3); }
+  .ctrl { display: grid; gap: 8px; padding-top: var(--s-4); border-top: 1px dashed var(--c-border); }
+  .ctrl__state { font-size: var(--fs-sm); color: var(--c-ink-2); }
+  .ctrl__btns { display: flex; gap: 8px; }
+  .ctrl__stop { color: var(--c-risk); }
+
+  .fvc { display: grid; gap: var(--s-4); }
+  .fvc__card { padding: var(--s-6); display: grid; gap: var(--s-4); align-content: start; }
+  .fvc__card--copy { border-color: var(--c-tint-2); }
+  @media (min-width: 760px) { .fvc { grid-template-columns: 1fr 1fr; gap: var(--s-5); } .ui { padding: var(--s-6); } }
+
+  .safety { display: grid; gap: var(--s-3); margin-top: var(--s-7); }
+  .safety li { display: flex; gap: 14px; padding: var(--s-5); align-items: flex-start; }
+  .safety li > :global(svg) { width: 24px; height: 24px; color: var(--c-cobalt); flex: none; }
+  .safety p { color: var(--c-ink-2); font-size: var(--fs-sm); margin-top: 4px; line-height: 1.55; }
+  @media (min-width: 860px) { .safety { grid-template-columns: repeat(3, 1fr); gap: var(--s-4); } }
+  #access :global(.holder) { padding-bottom: 0; }
+</style>

@@ -1,0 +1,93 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import CopyButton from '../components/CopyButton.astro';
+import HolderAccess from '../components/HolderAccess.astro';
+import { brand, copyTradingAccess, formatNumber, tokenInfo } from '../config/site';
+const min = formatNumber(copyTradingAccess.minimumHolding);
+const ca = tokenInfo.contractAddress;
+---
+<Base
+  title="$MOCHE"
+  description={`$MOCHE is the usemoche token. Total supply ${formatNumber(brand.totalSupply)}. Hold ${min} $MOCHE for free KOL copy trading access.`}
+  current="moche"
+>
+  <section class="page-hero">
+    <div class="container tok">
+      <div>
+        <span class="eyebrow"><Icon name="coins" size={16} /> Token</span>
+        <h1 class="h1" style="margin-top:12px">{brand.token}</h1>
+        <p class="lead">The token behind usemoche. Holding it unlocks free access to KOL wallet copy trading.</p>
+      </div>
+      <img src="/images/moche-avatar-256.webp" width="160" height="160" alt="Moche, the usemoche mascot" class="tok__coin" loading="eager" decoding="async" />
+    </div>
+  </section>
+
+  <section class="section facts-wrap" aria-labelledby="facts-title">
+    <div class="container">
+      <h2 id="facts-title" class="sr-only">Token facts</h2>
+      <dl class="facts">
+        <div class="card fact">
+          <dt>Ticker</dt>
+          <dd class="fact__v">{brand.token}</dd>
+        </div>
+        <div class="card fact">
+          <dt>Total supply</dt>
+          <dd class="fact__v">{formatNumber(brand.totalSupply)}</dd>
+        </div>
+        <div class="card fact">
+          <dt>Free copy trading</dt>
+          <dd class="fact__v">{min}<small> held</small></dd>
+        </div>
+        <div class="card fact">
+          <dt>Network</dt>
+          <dd class="fact__v">{tokenInfo.network ?? <span class="badge badge--soon">To be confirmed</span>}</dd>
+        </div>
+        <div class="card fact fact--wide">
+          <dt>Contract address</dt>
+          <dd>
+            {ca ? (
+              <div class="ca">
+                <code id="ca">{ca}</code>
+                <CopyButton text={ca} label="Copy" targetId="ca" />
+              </div>
+            ) : (
+              <p class="ca-empty"><span class="badge badge--soon">Not published here yet</span> The official contract address will be added to this page by the team.</p>
+            )}
+          </dd>
+        </div>
+      </dl>
+      <p class="notice notice--warn safety"><Icon name="alert" /><span><strong>Watch out for fakes.</strong> Only trust a contract address published on official usemoche channels. We will never DM you an address or ask for your seed phrase.</span></p>
+    </div>
+  </section>
+
+  <HolderAccess />
+
+  <section class="section" aria-labelledby="disc-title" style="padding-top:0">
+    <div class="container">
+      <div class="card disc">
+        <h2 id="disc-title" class="h3">Please read</h2>
+        <p>{brand.token} is a crypto asset and its price can be highly volatile. Nothing on this site is financial advice. Holding {brand.token} gives access to features, not a promise of returns.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .tok { display: flex; align-items: center; justify-content: space-between; gap: var(--s-6); }
+  .tok__coin { width: clamp(88px, 22vw, 160px); height: auto; border-radius: 50%; box-shadow: 0 0 0 6px #fff, 0 0 0 7px var(--c-tint-2), var(--sh-3); flex: none; }
+  .facts-wrap { padding-top: var(--s-6); padding-bottom: 0; }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .fact { padding: var(--s-5); display: grid; gap: 6px; align-content: start; }
+  .fact dt { font-size: var(--fs-xs); font-weight: 700; color: var(--c-ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .fact__v { font-size: clamp(1.125rem, 0.9rem + 1vw, 1.625rem); font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .fact__v small { font-size: 0.6em; font-weight: 600; color: var(--c-ink-3); }
+  .fact--wide { grid-column: 1 / -1; }
+  .ca { display: flex; align-items: center; gap: 12px; justify-content: space-between; flex-wrap: wrap; }
+  .ca code { font-family: var(--font-mono); font-weight: 600; overflow-wrap: anywhere; }
+  .ca-empty { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; color: var(--c-ink-2); font-size: var(--fs-sm); }
+  .safety { margin-top: var(--s-4); }
+  .disc { padding: var(--s-6); display: grid; gap: var(--s-2); background: var(--c-surface-2); }
+  .disc p { color: var(--c-ink-2); font-size: var(--fs-sm); max-width: 75ch; }
+  @media (min-width: 900px) { .facts { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+</style>

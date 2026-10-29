@@ -1,0 +1,50 @@
+---
+import Icon from './Icon.astro';
+interface Props {
+  text: string;
+  label?: string;
+  variant?: 'solid' | 'soft' | 'icon';
+  targetId?: string;
+  tabLinked?: boolean;
+  class?: string;
+}
+const { text, label = 'Copy', variant = 'soft', targetId, tabLinked = false, class: cls } = Astro.props;
+---
+<button
+  type="button"
+  class:list={['copy-btn', `copy-btn--${variant}`, cls]}
+  data-copy={text}
+  data-copy-target={targetId}
+  data-tab-copy={tabLinked ? '' : undefined}
+  aria-label={`Copy command ${text}`}
+>
+  <span class="copy-btn__icons" aria-hidden="true">
+    <Icon name="copy" class="i-copy" />
+    <Icon name="check" class="i-check" />
+  </span>
+  {variant !== 'icon' && <span data-copy-label>{label}</span>}
+  <span class="sr-only" role="status" aria-live="polite" data-copy-status></span>
+</button>
+
+<style>
+  .copy-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 44px; padding: 0 16px; border-radius: var(--r-md);
+    font-weight: 700; font-size: var(--fs-sm); white-space: nowrap;
+    transition: background-color var(--dur-1), color var(--dur-1), box-shadow var(--dur-2);
+  }
+  .copy-btn--solid { background: var(--c-cobalt); color: #fff; box-shadow: var(--sh-cta); }
+  .copy-btn--solid:hover { background: var(--c-cobalt-hover); }
+  .copy-btn--soft { background: #fff; color: var(--c-cobalt); border: 1.5px solid var(--c-tint-2); }
+  .copy-btn--soft:hover { background: var(--c-pale); }
+  .copy-btn--icon { width: 44px; padding: 0; background: var(--c-cobalt); color: #fff; border-radius: 50%; box-shadow: var(--sh-cta); }
+  .copy-btn--icon:hover { background: var(--c-cobalt-hover); }
+  .copy-btn__icons { position: relative; width: 18px; height: 18px; }
+  .copy-btn__icons :global(svg) { position: absolute; inset: 0; width: 18px; height: 18px; transition: opacity var(--dur-1), transform var(--dur-2) var(--ease); }
+  .copy-btn :global(.i-check) { opacity: 0; transform: scale(0.6); }
+  .copy-btn[data-state='copied'] :global(.i-copy) { opacity: 0; transform: scale(0.6); }
+  .copy-btn[data-state='copied'] :global(.i-check) { opacity: 1; transform: none; }
+  .copy-btn--soft[data-state='copied'] { background: var(--c-ok-bg); color: var(--c-ok); border-color: #bfe6d4; }
+  .copy-btn--solid[data-state='copied'], .copy-btn--icon[data-state='copied'] { background: var(--c-ok); box-shadow: none; }
+  .copy-btn[data-state='error'] { background: var(--c-warn-bg); color: var(--c-warn); border-color: #f5dfb5; }
+</style>

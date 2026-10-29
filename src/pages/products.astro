@@ -1,0 +1,191 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import CopyButton from '../components/CopyButton.astro';
+import SignalReply from '../components/SignalReply.astro';
+import CheckReply from '../components/CheckReply.astro';
+import { brand, copyTradingAccess, formatNumber, supportedNetworks } from '../config/site';
+import { products } from '../content/site-content';
+const min = formatNumber(copyTradingAccess.minimumHolding);
+---
+<Base
+  title="Products"
+  description="Signal Bot, Token & Wallet Check, KOL Copy Trading and the upcoming Moche Launchpad. Here's what each tool does and how to use it."
+  current="products"
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow"><Icon name="grid" size={16} /> Products</span>
+      <h1 class="h1" style="margin-top:12px">Four tools, one friendly companion.</h1>
+      <p class="lead">Ask for a signal or a check right in your X replies, follow wallets you trust, and soon, launch tokens of your own.</p>
+      <nav aria-label="Jump to product" class="jump">
+        {products.map((p) => (
+          <a href={p.id === 'copy' ? '#copy-trading' : `#${p.id}`}><Icon name={p.icon} size={18} /> {p.name}</a>
+        ))}
+      </nav>
+    </div>
+  </section>
+
+  <!-- Signal Bot -->
+  <section class="section prod" id="signal" aria-labelledby="signal-title">
+    <div class="container split">
+      <div class="prod__copy">
+        <span class="icon-tile icon-tile--solid"><Icon name="signal" /></span>
+        <h2 id="signal-title" class="h2">Signal Bot</h2>
+        <p class="lead">Ask Moche for a read on a token, right under the post you’re looking at.</p>
+
+        <div class="cmdline">
+          <code id="cmd-signal">{brand.commands.signal}</code>
+          <CopyButton text={brand.commands.signal} targetId="cmd-signal" />
+        </div>
+
+        <ol role="list" class="num">
+          <li><span>1</span><div><strong>Find a post about a token.</strong> Any post that names the token you’re curious about.</div></li>
+          <li><span>2</span><div><strong>Reply with <span class="cmd">{brand.commands.signal}</span>.</strong></div></li>
+          <li><span>3</span><div><strong>Receive contextual analysis.</strong> Moche replies in the thread.</div></li>
+        </ol>
+
+        <div class="incl">
+          <h3 class="incl__h">The reply can include</h3>
+          <ul role="list" class="incl__grid">
+            <li><Icon name="scale" /><div><strong>Buy / Sell / Wait</strong><span>An overall assessment</span></div></li>
+            <li><Icon name="message" /><div><strong>Supporting reasons</strong><span>Why Moche leans that way</span></div></li>
+            <li><Icon name="signal" /><div><strong>Confidence level</strong><span>How sure the read is</span></div></li>
+            <li><Icon name="alert" /><div><strong>Risk context</strong><span>What could go wrong</span></div></li>
+          </ul>
+        </div>
+
+        <p class="notice"><Icon name="info" /><span>If Moche can’t identify the token from the post, it will ask you for the <strong>contract address</strong>.</span></p>
+        <p class="notice notice--warn"><Icon name="alert" /><span><strong>Signals are research, not guarantees.</strong> They don’t place trades for you and can be wrong. Make your own decisions.</span></p>
+      </div>
+      <div class="prod__demo card">
+        <SignalReply />
+      </div>
+    </div>
+  </section>
+
+  <!-- Token & Wallet Check -->
+  <section class="section section--tint prod" id="check" aria-labelledby="check-title">
+    <div class="container split split--top">
+      <div class="prod__copy">
+        <span class="icon-tile icon-tile--solid"><Icon name="shield" /></span>
+        <h2 id="check-title" class="h2">Token & Wallet Check</h2>
+        <p class="lead">Get a risk estimate for a token or project, with the evidence behind it. Check also supports wallet research.</p>
+
+        <div class="cmdline">
+          <code id="cmd-check">{brand.commands.check}</code>
+          <CopyButton text={brand.commands.check} targetId="cmd-check" />
+        </div>
+
+        <div class="incl">
+          <h3 class="incl__h">What Moche looks at</h3>
+          <ul role="list" class="incl__grid">
+            <li><Icon name="key" /><div><strong>Token permissions</strong><span>What the contract allows</span></div></li>
+            <li><Icon name="pie" /><div><strong>Holder concentration</strong><span>How supply is spread</span></div></li>
+            <li><Icon name="droplet" /><div><strong>Liquidity risks</strong><span>Liquidity-related red flags</span></div></li>
+            <li><Icon name="activity" /><div><strong>Wallet activity</strong><span>Relevant on-chain moves</span></div></li>
+          </ul>
+          <p class="muted small" style="margin-top:12px">Every result ends with the key concerns and the evidence that supports them.</p>
+        </div>
+      </div>
+      <div class="prod__side">
+        <div class="prod__demo card"><CheckReply /></div>
+
+        <div class="rvc card">
+          <h3 class="h3">Risk and confidence are two different things</h3>
+          <dl>
+            <div>
+              <dt><Icon name="scale" /> Risk estimate</dt>
+              <dd>How risky the token appears, from Low to High, based on what can be observed right now.</dd>
+            </div>
+            <div>
+              <dt><Icon name="signal" /> Confidence</dt>
+              <dd>How much evidence the estimate rests on. A “Low risk” result can still come with low confidence.</dd>
+            </div>
+          </dl>
+          <p class="notice notice--warn"><Icon name="alert" /><span><strong>Low risk is not “safe”.</strong> Some risks can’t be detected, and conditions change quickly.</span></p>
+        </div>
+
+        <div class="wallet card">
+          <h3 class="h3"><Icon name="wallet" size={20} /> Wallet research</h3>
+          <p>Check can also look into a wallet’s activity. The exact way to submit a wallet is still being finalised, and we’ll document it here once it’s ready.</p>
+          <p class="small muted">
+            Supported networks:{' '}
+            {supportedNetworks.length ? <strong>{supportedNetworks.join(', ')}</strong> : <span class="badge badge--soon">To be confirmed</span>}
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Copy trading + Launchpad -->
+  <section class="section" aria-label="More tools">
+    <div class="container more">
+      <article class="more__card card" id="copy-trading">
+        <span class="icon-tile"><Icon name="users" /></span>
+        <h2 class="h3">KOL Copy Trading</h2>
+        <p>Follow selected KOL and whale wallets, see their activity, and optionally copy their trades within spending limits you set. Pause or stop at any time.</p>
+        <span class="badge badge--holder"><Icon name="coins" /> Hold {min} {brand.token} for free access</span>
+        <a href="/copy-trading/" class="btn btn--primary">Explore Copy Trading <Icon name="arrow-right" /></a>
+      </article>
+      <article class="more__card card more__card--muted" id="launchpad">
+        <span class="icon-tile"><Icon name="rocket" /></span>
+        <h2 class="h3">Moche Launchpad</h2>
+        <p>A simple way to create new tokens and discover what others are launching, with its own usemoche personality.</p>
+        <span class="badge badge--soon"><Icon name="clock" /> Coming Soon</span>
+        <a href="/launchpad/" class="btn btn--secondary">Preview the launchpad <Icon name="arrow-right" /></a>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .jump { display: flex; gap: 8px; margin-top: var(--s-6); overflow-x: auto; scrollbar-width: none; padding: 4px; margin-inline: -4px; }
+  .jump::-webkit-scrollbar { display: none; }
+  .jump a {
+    display: inline-flex; align-items: center; gap: 8px; flex: none;
+    min-height: 44px; padding: 0 16px; border-radius: var(--r-pill);
+    background: #fff; border: 1px solid var(--c-border); font-weight: 700; font-size: var(--fs-sm);
+  }
+  .jump a:hover { border-color: var(--c-tint-2); color: var(--c-cobalt); }
+  .jump a :global(svg) { color: var(--c-cobalt); }
+
+  .prod__copy { display: grid; gap: var(--s-5); align-content: start; }
+  .prod__copy .h2 { margin-top: -4px; }
+  .prod__demo { padding: var(--s-5); box-shadow: var(--sh-3); border-radius: var(--r-xl); }
+  .prod__side { display: grid; gap: var(--s-4); }
+
+  .cmdline { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 8px 8px 16px; border-radius: var(--r-lg); background: var(--c-pale); border: 1.5px solid var(--c-tint-2); }
+  .section--tint .cmdline { background: #fff; }
+  .cmdline code { font-family: var(--font-mono); font-weight: 700; font-size: 1.125rem; overflow-wrap: anywhere; }
+
+  .num { display: grid; gap: 12px; }
+  .num li { display: flex; gap: 12px; align-items: flex-start; color: var(--c-ink-2); }
+  .num li > span { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--c-tint); color: var(--c-cobalt); font-weight: 800; font-size: var(--fs-sm); flex: none; }
+  .num strong { color: var(--c-ink); }
+
+  .incl__h { font-size: var(--fs-xs); font-weight: 700; color: var(--c-ink-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; }
+  .incl__grid { display: grid; gap: 10px; }
+  .incl__grid li { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: var(--r-md); background: #fff; border: 1px solid var(--c-border); }
+  .incl__grid :global(svg) { width: 20px; height: 20px; color: var(--c-cobalt); flex: none; margin-top: 2px; }
+  .incl__grid div { display: grid; line-height: 1.35; }
+  .incl__grid strong { font-size: var(--fs-sm); }
+  .incl__grid span { font-size: var(--fs-xs); color: var(--c-ink-3); }
+  @media (min-width: 520px) { .incl__grid { grid-template-columns: 1fr 1fr; } }
+
+  .rvc, .wallet { padding: var(--s-5); display: grid; gap: var(--s-4); }
+  .rvc dl { display: grid; gap: 12px; }
+  .rvc dt { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: var(--fs-sm); }
+  .rvc dt :global(svg) { width: 18px; height: 18px; color: var(--c-cobalt); }
+  .rvc dd { margin: 2px 0 0 26px; font-size: var(--fs-sm); color: var(--c-ink-2); line-height: 1.5; }
+  .wallet h3 { display: flex; align-items: center; gap: 8px; }
+  .wallet h3 :global(svg) { color: var(--c-cobalt); }
+  .wallet p { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: 1.55; }
+
+  .more { display: grid; gap: var(--s-4); }
+  .more__card { padding: var(--s-6); display: grid; gap: var(--s-3); align-content: start; justify-items: start; }
+  .more__card p { color: var(--c-ink-2); }
+  .more__card .btn { margin-top: var(--s-2); }
+  .more__card--muted { background: var(--c-surface-2); }
+  @media (min-width: 760px) { .more { grid-template-columns: 1fr 1fr; gap: var(--s-5); } .more__card { padding: var(--s-7); } }
+</style>

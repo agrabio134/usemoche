@@ -1,0 +1,51 @@
+---
+import Icon from './Icon.astro';
+import CopyButton from './CopyButton.astro';
+interface Props { id: string; title: string; command: string; icon: string; steps: string[]; note: string; href: string }
+const { id, title, command, icon, steps, note, href } = Astro.props;
+---
+<dialog id={id} class="sheet" aria-labelledby={`${id}-title`} data-sheet>
+  <div class="sheet__panel cs">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="cs__head">
+      <span class="icon-tile icon-tile--solid"><Icon name={icon} /></span>
+      <div>
+        <h2 id={`${id}-title`} class="h3">{title}</h2>
+        <p class="muted small">Use it in a reply on X</p>
+      </div>
+      <button type="button" class="sheet__close" aria-label="Close" data-sheet-close><Icon name="x" /></button>
+    </div>
+
+    <div class="cs__cmd">
+      <code id={`${id}-cmd`}>{command}</code>
+      <CopyButton text={command} variant="solid" label="Copy" targetId={`${id}-cmd`} />
+    </div>
+
+    <ol class="cs__steps" role="list">
+      {steps.map((s, i) => (
+        <li><span class="cs__n">{i + 1}</span><span>{s}</span></li>
+      ))}
+    </ol>
+
+    <p class="notice"><Icon name="info" /> <span>{note}</span></p>
+
+    <a href={href} class="btn btn--secondary btn--block cs__more" data-sheet-close>
+      Read the full guide <Icon name="arrow-right" />
+    </a>
+  </div>
+</dialog>
+
+<style>
+  .cs { display: grid; gap: var(--s-5); }
+  .cs__head { display: flex; align-items: center; gap: 14px; }
+  .cs__head .sheet__close { margin-left: auto; }
+  .cs__cmd {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 10px 10px 16px; border-radius: var(--r-lg);
+    background: var(--c-pale); border: 1.5px solid var(--c-tint-2);
+  }
+  .cs__cmd code { font-family: var(--font-mono); font-weight: 700; font-size: 1.125rem; overflow-wrap: anywhere; }
+  .cs__steps { display: grid; gap: 12px; font-size: var(--fs-md); }
+  .cs__steps li { display: flex; gap: 12px; align-items: flex-start; }
+  .cs__n { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; flex: none; background: var(--c-tint); color: var(--c-cobalt); font-weight: 800; font-size: var(--fs-sm); }
+</style>

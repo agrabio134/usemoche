@@ -1,0 +1,61 @@
+---
+import Icon from './Icon.astro';
+import ReplyHead from './ReplyHead.astro';
+import { previews } from '../content/site-content';
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+const p = previews.signal;
+const reasons = compact ? p.reasons.slice(0, 2) : p.reasons;
+---
+<article class:list={['reply', { 'reply--compact': compact }]} aria-label="Illustrative signal reply">
+  <ReplyHead />
+  <div class="reply__grid">
+    <div class="stat">
+      <span class="stat__label">Assessment</span>
+      <span class="assess" data-tone="wait">
+        <Icon name="clock" /> {p.assessment}
+      </span>
+    </div>
+    <div class="stat">
+      <span class="stat__label">Confidence</span>
+      <span class="meter" role="img" aria-label={`Confidence: ${p.confidence}`}>
+        <span class="meter__bars" data-level="2"><i></i><i></i><i></i></span>
+        <strong>{p.confidence}</strong>
+      </span>
+    </div>
+  </div>
+  <div class="reply__block">
+    <span class="stat__label">Why</span>
+    <ul role="list" class="reasons">
+      {reasons.map((r) => <li>{r}</li>)}
+    </ul>
+  </div>
+  <p class="reply__risk"><Icon name="alert" /> <span><strong>Risk context:</strong> {p.risk}</span></p>
+  {!compact && (
+    <p class="reply__foot">Research only. Signals never place trades and aren’t guaranteed.</p>
+  )}
+</article>
+
+<style>
+  .reply { display: grid; gap: 14px; }
+  .reply__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat { display: grid; gap: 6px; padding: 12px; border-radius: var(--r-md); background: var(--c-surface-2); border: 1px solid var(--c-border); }
+  .stat__label { font-size: var(--fs-xs); font-weight: 700; color: var(--c-ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .assess { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; font-size: var(--fs-lg); }
+  .assess :global(svg) { width: 18px; height: 18px; }
+  .assess[data-tone='wait'] { color: var(--c-warn); }
+  .meter { display: inline-flex; align-items: center; gap: 10px; font-size: var(--fs-md); }
+  .meter__bars { display: inline-flex; gap: 3px; }
+  .meter__bars i { width: 14px; height: 8px; border-radius: 3px; background: var(--c-tint-2); }
+  .meter__bars[data-level='1'] i:nth-child(-n + 1),
+  .meter__bars[data-level='2'] i:nth-child(-n + 2),
+  .meter__bars[data-level='3'] i { background: var(--c-cobalt); }
+  .reply__block { display: grid; gap: 8px; }
+  .reasons { display: grid; gap: 6px; font-size: var(--fs-sm); color: var(--c-ink-2); line-height: 1.5; }
+  .reasons li { position: relative; padding-left: 18px; }
+  .reasons li::before { content: ''; position: absolute; left: 4px; top: 0.6em; width: 6px; height: 6px; border-radius: 50%; background: var(--c-sky); }
+  .reply__risk { display: flex; gap: 8px; align-items: flex-start; font-size: var(--fs-sm); color: var(--c-ink-2); line-height: 1.5; padding-top: 12px; border-top: 1px dashed var(--c-border); }
+  .reply__risk :global(svg) { width: 18px; height: 18px; color: var(--c-warn-dot); flex: none; margin-top: 1px; }
+  .reply__risk strong { color: var(--c-ink); }
+  .reply__foot { font-size: var(--fs-xs); color: var(--c-ink-3); }
+</style>

@@ -1,0 +1,171 @@
+---
+import Icon from '../Icon.astro';
+import CopyButton from '../CopyButton.astro';
+import SignalReply from '../SignalReply.astro';
+import CheckReply from '../CheckReply.astro';
+import { brand } from '../../config/site';
+import { previews } from '../../content/site-content';
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container">
+    <div class="hero__top">
+      <div class="hero__copy">
+        <h1 id="hero-title" class="h1">
+          Meet <span class="accent">Moche<span class="tight">.</span></span>
+          <span class="hero__sub-h">Your crypto research companion.</span>
+        </h1>
+        <p class="lead">Trading signals, token and wallet checks, and tools to follow the wallets that matter.</p>
+        <div class="btn-row">
+          <a href="/products/" class="btn btn--primary">Explore Products <Icon name="arrow-right" /></a>
+          <a href="#how-it-works" class="btn btn--secondary">How It Works</a>
+        </div>
+      </div>
+      <div class="hero__mascot" aria-hidden="true">
+        <img
+          src="/images/moche-wave-560.webp"
+          srcset="/images/moche-wave-360.webp 360w, /images/moche-wave-560.webp 560w"
+          sizes="(min-width: 900px) 360px, 160px"
+          width="560"
+          height="553"
+          alt=""
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
+    </div>
+
+    <div class="demo card" data-tabs>
+      <div class="demo__left">
+        <div class="tabs" role="tablist" aria-label="Command preview">
+          <button type="button" role="tab" id="tab-signal" aria-selected="true" aria-controls="prev-signal inc-signal" data-command={brand.commands.signal}>
+            <Icon name="signal" /> signal
+          </button>
+          <button type="button" role="tab" id="tab-check" aria-selected="false" tabindex="-1" aria-controls="prev-check inc-check" data-command={brand.commands.check}>
+            <Icon name="shield" /> check
+          </button>
+        </div>
+
+        <p class="demo__label" id="cmd-label">Reply under a post on X with</p>
+        <div class="cmdbox">
+          <span class="cmdbox__caret" aria-hidden="true"><Icon name="chevron-right" /></span>
+          <code id="hero-cmd" class="cmdbox__text" data-tab-command aria-labelledby="cmd-label hero-cmd">{brand.commands.signal}</code>
+          <CopyButton text={brand.commands.signal} variant="icon" targetId="hero-cmd" tabLinked />
+        </div>
+        <p class="demo__hint">
+          <Icon name="info" /> Works under posts that mention a token. If Moche can’t tell which token, it asks for the contract address.
+        </p>
+        <div class="includes" id="inc-signal">
+          <p class="includes__h">The reply can include</p>
+          <ul role="list">
+            <li><Icon name="scale" /> Buy / Sell / Wait</li>
+            <li><Icon name="message" /> Supporting reasons</li>
+            <li><Icon name="signal" /> Confidence level</li>
+            <li><Icon name="alert" /> Risk context</li>
+          </ul>
+        </div>
+        <div class="includes" id="inc-check" hidden>
+          <p class="includes__h">The reply can cover</p>
+          <ul role="list">
+            <li><Icon name="key" /> Token permissions</li>
+            <li><Icon name="pie" /> Holder concentration</li>
+            <li><Icon name="droplet" /> Liquidity risks</li>
+            <li><Icon name="activity" /> Wallet activity</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="demo__right">
+        <div id="prev-signal" role="tabpanel" aria-labelledby="tab-signal" tabindex="0">
+          <SignalReply compact />
+        </div>
+        <div id="prev-check" role="tabpanel" aria-labelledby="tab-check" tabindex="0" hidden>
+          <CheckReply compact />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-top: clamp(20px, 3vw, 48px);
+    padding-bottom: clamp(40px, 5vw, 72px);
+    background:
+      radial-gradient(900px 420px at 88% 0%, rgb(120 184 255 / 0.28), transparent 65%),
+      linear-gradient(180deg, var(--c-pale) 0%, #f6faff 70%, #fff 100%);
+  }
+  .hero__top { display: grid; grid-template-columns: minmax(0, 1fr); position: relative; }
+  .hero__copy { position: relative; z-index: 2; }
+  .hero .h1 { font-size: clamp(2.25rem, 1.2rem + 4vw, 4.5rem); }
+  .hero__sub-h {
+    display: block; margin-top: 0.12em;
+    font-size: 0.62em; line-height: 1.12; letter-spacing: -0.03em; color: var(--c-navy);
+  }
+  .hero .lead { margin-top: var(--s-4); max-width: 34ch; }
+  .hero .btn-row { margin-top: var(--s-6); }
+
+  /* Mascot peeks over the demo card */
+  .hero__mascot {
+    justify-self: end;
+    width: clamp(120px, 31vw, 170px);
+    margin-top: -14px;
+    margin-bottom: -26px;  /* tuck behind the card edge */
+    margin-right: clamp(4px, 3vw, 24px);
+    position: relative; z-index: 1;
+  }
+  .hero__mascot img { width: 100%; height: auto; aspect-ratio: 560 / 553; }
+
+  .demo {
+    position: relative; z-index: 2;
+    padding: var(--s-4);
+    display: grid; gap: var(--s-5);
+    box-shadow: var(--sh-3);
+    border-radius: var(--r-xl);
+  }
+  .tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--c-surface-2); border: 1px solid var(--c-border); border-radius: var(--r-md); }
+  .tabs [role='tab'] {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px;
+    border-radius: 11px; font-weight: 700; font-size: var(--fs-sm); color: var(--c-ink-2);
+    transition: background-color var(--dur-1), color var(--dur-1), box-shadow var(--dur-1);
+  }
+  .tabs [role='tab'] :global(svg) { width: 18px; height: 18px; }
+  .tabs [role='tab']:hover { color: var(--c-navy); }
+  .tabs [role='tab'][aria-selected='true'] { background: var(--c-cobalt); color: #fff; box-shadow: var(--sh-cta); }
+
+  .demo__label { margin-top: var(--s-4); font-size: var(--fs-sm); font-weight: 600; color: var(--c-ink-3); }
+  .cmdbox {
+    margin-top: var(--s-2);
+    display: flex; align-items: center; gap: 10px;
+    min-height: 60px; padding: 8px 8px 8px 14px;
+    background: var(--c-pale); border: 1.5px solid var(--c-tint-2); border-radius: var(--r-lg);
+  }
+  .cmdbox__caret { color: var(--c-cobalt); display: grid; }
+  .cmdbox__caret :global(svg) { width: 18px; height: 18px; }
+  .cmdbox__text { font-family: var(--font-mono); font-size: clamp(1rem, 0.9rem + 0.5vw, 1.25rem); font-weight: 700; color: var(--c-navy); flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .demo__hint { display: flex; gap: 8px; margin-top: var(--s-3); font-size: var(--fs-xs); color: var(--c-ink-3); line-height: 1.5; }
+  .demo__hint :global(svg) { width: 16px; height: 16px; flex: none; margin-top: 1px; }
+  .demo__right [role='tabpanel'] { border-radius: var(--r-lg); padding: var(--s-4); border: 1px solid var(--c-border); background: #fff; }
+  .demo__right [role='tabpanel']:focus-visible { box-shadow: var(--focus-ring); outline: none; }
+
+  .tight { margin-left: -0.06em; }
+  .includes { display: none; margin-top: var(--s-6); padding-top: var(--s-5); border-top: 1px dashed var(--c-border); }
+  .includes[hidden] { display: none !important; }
+  .includes__h { font-size: var(--fs-xs); font-weight: 700; color: var(--c-ink-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .includes ul { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; font-size: var(--fs-sm); font-weight: 600; }
+  .includes li { display: flex; align-items: center; gap: 8px; }
+  .includes :global(svg) { width: 18px; height: 18px; color: var(--c-cobalt); flex: none; }
+  @media (min-width: 640px) {
+    .demo { padding: var(--s-6); }
+  }
+  @media (min-width: 900px) {
+    .hero__top { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); align-items: end; }
+    .hero__mascot { width: min(360px, 100%); margin: 0 clamp(0px, 3vw, 40px) -44px 0; }
+    .hero .lead { max-width: 44ch; }
+    .demo { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: var(--s-7); padding: var(--s-7); align-items: start; }
+    .demo__right [role='tabpanel'] { background: var(--c-surface-2); border-color: transparent; padding: var(--s-5); }
+    .demo__right :global(.stat) { background: #fff; }
+    .demo__right :global(.rows) { background: #fff; }
+    .includes { display: block; }
+  }
+</style>

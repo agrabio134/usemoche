@@ -1,0 +1,75 @@
+---
+import Icon from './Icon.astro';
+import ReplyHead from './ReplyHead.astro';
+import { previews } from '../content/site-content';
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+const p = previews.check;
+const scale = ['Low', 'Moderate', 'Elevated', 'High'];
+const riskIdx = scale.indexOf(p.riskEstimate);
+---
+<article class:list={['reply', { 'reply--compact': compact }]} aria-label="Illustrative check reply">
+  <ReplyHead />
+  <div class="reply__grid">
+    <div class="stat">
+      <span class="stat__label">Risk estimate</span>
+      <span class="risk" role="img" aria-label={`Estimated risk: ${p.riskEstimate} on a scale of Low, Moderate, Elevated, High`}>
+        <strong>{p.riskEstimate}</strong>
+        <span class="risk__scale">
+          {scale.map((_, i) => <i class:list={{ on: i <= riskIdx }} data-i={i}></i>)}
+        </span>
+      </span>
+    </div>
+    <div class="stat">
+      <span class="stat__label">Confidence</span>
+      <span class="conf" role="img" aria-label={`Confidence in this analysis: ${p.confidence}`}>
+        <strong>{p.confidence}</strong>
+        <span class="conf__bars"><i class="on"></i><i class="on"></i><i class="on"></i></span>
+      </span>
+    </div>
+  </div>
+  <ul role="list" class="rows">
+    {p.rows.map((r) => (
+      <li>
+        <span class:list={['st', `st--${r.status}`]}>
+          <Icon name={r.status === 'ok' ? 'check' : 'alert'} />
+          <span class="sr-only">{r.status === 'ok' ? 'No concern found:' : 'Worth a look:'}</span>
+        </span>
+        <span class="rows__txt">
+          <strong>{r.label}</strong>
+          {!compact && <span>{r.note}</span>}
+        </span>
+      </li>
+    ))}
+  </ul>
+  <p class="reply__foot">
+    <Icon name="info" /> Risk is an estimate, separate from confidence. A low risk result is not a guarantee of safety.
+  </p>
+</article>
+
+<style>
+  .reply { display: grid; gap: 14px; }
+  .reply__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat { display: grid; gap: 6px; padding: 12px; border-radius: var(--r-md); background: var(--c-surface-2); border: 1px solid var(--c-border); }
+  .stat__label { font-size: var(--fs-xs); font-weight: 700; color: var(--c-ink-3); text-transform: uppercase; letter-spacing: 0.06em; }
+  .risk, .conf { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: var(--fs-md); }
+  .risk__scale, .conf__bars { display: inline-flex; gap: 3px; }
+  .risk__scale i, .conf__bars i { width: 12px; height: 8px; border-radius: 3px; background: var(--c-tint-2); }
+  .risk__scale i.on[data-i='0'] { background: #3fb68b; }
+  .risk__scale i.on[data-i='1'] { background: var(--c-warn-dot); }
+  .risk__scale i.on[data-i='2'] { background: #ee7b2e; }
+  .risk__scale i.on[data-i='3'] { background: #d6453a; }
+  .conf__bars i.on { background: var(--c-cobalt); }
+  .rows { display: grid; border: 1px solid var(--c-border); border-radius: var(--r-md); overflow: hidden; }
+  .rows li { display: flex; align-items: center; gap: 12px; padding: 10px 12px; font-size: var(--fs-sm); }
+  .rows li + li { border-top: 1px solid var(--c-border); }
+  .rows__txt { display: grid; line-height: 1.35; }
+  .rows__txt span { color: var(--c-ink-3); font-size: var(--fs-xs); }
+  .rows__txt strong { font-weight: 600; }
+  .st { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; flex: none; }
+  .st :global(svg) { width: 14px; height: 14px; stroke-width: 2.6; }
+  .st--ok { background: var(--c-ok-bg); color: var(--c-ok); }
+  .st--warn { background: var(--c-warn-bg); color: var(--c-warn); }
+  .reply__foot { display: flex; gap: 6px; align-items: flex-start; font-size: var(--fs-xs); color: var(--c-ink-3); line-height: 1.5; }
+  .reply__foot :global(svg) { width: 14px; height: 14px; flex: none; margin-top: 2px; }
+</style>

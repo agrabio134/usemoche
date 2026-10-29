@@ -1,0 +1,102 @@
+---
+import Icon from './Icon.astro';
+import { brand, copyTradingAccess, formatNumber } from '../config/site';
+interface Props { showLink?: boolean; headingLevel?: 'h2' | 'h3' }
+const { showLink = true } = Astro.props;
+const min = formatNumber(copyTradingAccess.minimumHolding);
+const pct = (copyTradingAccess.minimumHolding / brand.totalSupply) * 100;
+const verifyUrl = copyTradingAccess.verificationUrl;
+---
+<section class="holder" aria-labelledby="holder-title">
+  <div class="container">
+    <div class="holder__card">
+      <div class="holder__copy">
+        <span class="badge badge--navy"><Icon name="coins" /> Holder access</span>
+        <h2 id="holder-title" class="h2">Hold MOCHE. Unlock Copy Trading.</h2>
+        <p class="holder__lead">Hold at least {min} {brand.token} to access KOL wallet copy trading for free.</p>
+        <ul role="list" class="holder__facts">
+          <li><Icon name="wallet" /> <span><strong>A holding requirement.</strong> Keep at least {min} {brand.token} in the wallet you use.</span></li>
+          <li><Icon name="x" /> <span><strong>Not a subscription.</strong> There’s no price to pay for access.</span></li>
+          <li><Icon name="lock" /> <span><strong>Not staking.</strong> You don’t lock or deposit your tokens anywhere.</span></li>
+        </ul>
+      </div>
+
+      <div class="holder__panel">
+        <p class="holder__k">Free access threshold</p>
+        <p class="holder__num">{min}<span>{brand.token}</span></p>
+        <p class="holder__sub">That’s {pct}% of the {formatNumber(brand.totalSupply)} total supply.</p>
+
+        <div class="holder__status" role="note">
+          <span class="holder__dot" aria-hidden="true"></span>
+          <div>
+            <strong>{verifyUrl ? 'Eligibility check available' : 'Preview: verification not connected yet'}</strong>
+            <p>{verifyUrl
+              ? 'Connect a wallet on the verification page to confirm your holding.'
+              : 'Wallet eligibility checks will appear here once the verification service is live. Nothing is checked on this site yet.'}</p>
+          </div>
+        </div>
+
+        <div class="holder__actions">
+          {verifyUrl && (
+            <a href={verifyUrl} class="btn btn--light btn--block" rel="noopener">Check eligibility <Icon name="arrow-right" /></a>
+          )}
+          {showLink && (
+            <a href="/copy-trading/" class:list={['btn btn--block', verifyUrl ? 'btn--ghost-light' : 'btn--light']}>
+              How copy trading works <Icon name="arrow-right" />
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .holder { padding-block: var(--section-y); }
+  .holder__card {
+    position: relative; overflow: hidden;
+    display: grid; gap: var(--s-7);
+    padding: clamp(24px, 4vw, 56px);
+    border-radius: var(--r-xl);
+    color: #d5def3;
+    background:
+      radial-gradient(600px 300px at 100% 0%, rgb(36 85 245 / 0.55), transparent 70%),
+      radial-gradient(500px 260px at 0% 100%, rgb(120 184 255 / 0.18), transparent 70%),
+      var(--c-navy);
+  }
+  .holder__copy { display: grid; gap: var(--s-4); align-content: start; }
+  .holder__copy .badge { justify-self: start; }
+  .holder .h2 { color: #fff; }
+  .holder__lead { font-size: var(--fs-lg); color: #fff; line-height: 1.5; max-width: 40ch; }
+  .holder__facts { display: grid; gap: 14px; margin-top: var(--s-2); font-size: var(--fs-sm); line-height: 1.5; }
+  .holder__facts li { display: flex; gap: 12px; align-items: flex-start; }
+  .holder__facts :global(svg) { width: 20px; height: 20px; flex: none; color: var(--c-sky); margin-top: 1px; }
+  .holder__facts strong { color: #fff; }
+
+  .holder__panel {
+    background: rgb(255 255 255 / 0.06);
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: var(--r-lg);
+    padding: clamp(20px, 3vw, 32px);
+    display: grid; gap: 6px; align-content: start;
+  }
+  .holder__k { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #9fb1dc; }
+  .holder__num { font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.25rem); font-weight: 800; color: #fff; letter-spacing: -0.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .holder__num span { font-size: 0.42em; margin-left: 10px; color: var(--c-sky); letter-spacing: 0; }
+  .holder__sub { font-size: var(--fs-sm); color: #9fb1dc; }
+  .holder__status {
+    display: flex; gap: 12px; align-items: flex-start; margin-top: var(--s-4);
+    padding: 14px; border-radius: var(--r-md); background: rgb(255 255 255 / 0.06); border: 1px dashed rgb(255 255 255 / 0.22);
+    font-size: var(--fs-sm); line-height: 1.5;
+  }
+  .holder__status strong { color: #fff; }
+  .holder__status p { color: #b4c2e4; margin-top: 2px; }
+  .holder__dot { width: 10px; height: 10px; border-radius: 50%; background: #f2a516; flex: none; margin-top: 6px; box-shadow: 0 0 0 4px rgb(242 165 22 / 0.18); }
+  .holder__actions { display: grid; gap: 8px; margin-top: var(--s-4); }
+  .holder :global(a:focus-visible) { box-shadow: 0 0 0 2px var(--c-navy), 0 0 0 4px var(--c-sky); }
+  .btn--ghost-light { color: #fff; border: 1.5px solid rgb(255 255 255 / 0.25); }
+
+  @media (min-width: 900px) {
+    .holder__card { grid-template-columns: 1.15fr 0.85fr; align-items: center; gap: var(--s-9); }
+  }
+</style>

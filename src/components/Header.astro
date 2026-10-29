@@ -1,0 +1,151 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { nav, type NavId, footerLinks } from '../content/site-content';
+
+interface Props { current: NavId }
+const { current } = Astro.props;
+
+const desktopLinks = [
+  { label: 'Products', href: '/products/', id: 'products', always: true },
+  { label: 'Copy Trading', href: '/copy-trading/', id: 'copy', always: false },
+  { label: 'Launchpad', href: '/launchpad/', id: 'launchpad', always: false },
+  { label: 'How It Works', href: '/#how-it-works', id: 'how', always: true },
+  { label: '$MOCHE', href: '/moche/', id: 'moche', always: true },
+];
+---
+<header class="header" data-header>
+  <div class="container header__inner">
+    <Logo />
+
+    <nav class="header__nav" aria-label="Main">
+      <ul role="list">
+        {desktopLinks.map((l) => (
+          <li class:list={[{ 'is-wide-only': !l.always }]}>
+            <a href={l.href} aria-current={l.id === current ? 'page' : undefined}>{l.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="header__actions">
+      <a href="/products/" class="btn btn--primary btn--sm header__cta">
+        Explore Products <Icon name="arrow-right" />
+      </a>
+      <button
+        type="button"
+        class="header__menu-btn"
+        aria-label="Open menu"
+        aria-haspopup="dialog"
+        aria-controls="site-menu"
+        data-menu-open
+      >
+        <Icon name="menu" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<dialog id="site-menu" class="sheet menu" aria-label="Menu" data-sheet>
+  <div class="sheet__panel">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="menu__top">
+      <Logo size="sm" />
+      <button type="button" class="sheet__close" aria-label="Close menu" data-sheet-close>
+        <Icon name="x" />
+      </button>
+    </div>
+    <nav aria-label="Menu">
+      <ul role="list" class="menu__list">
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} aria-current={item.id === current ? 'page' : undefined} data-sheet-close>
+              <span class="menu__icon"><Icon name={item.icon} /></span>
+              {item.label}
+              {item.id === 'launchpad' && <span class="badge badge--soon">Coming Soon</span>}
+              <Icon name="chevron-right" class="menu__chev" />
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href="/#how-it-works" data-sheet-close>
+            <span class="menu__icon"><Icon name="message" /></span>
+            How It Works
+            <Icon name="chevron-right" class="menu__chev" />
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <ul role="list" class="menu__links">
+      {footerLinks.map((l) =>
+        l.href ? (
+          <li><a href={l.href} target="_blank" rel="noopener noreferrer">{l.label}</a></li>
+        ) : (
+          <li><span class="menu__soon" title="Not published yet">{l.label} <small>soon</small></span></li>
+        )
+      )}
+    </ul>
+  </div>
+</dialog>
+
+<style>
+  .header {
+    position: sticky; top: 0; z-index: 40;
+    background: rgb(255 255 255 / 0.96);
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--dur-2), box-shadow var(--dur-2);
+  }
+  .header.is-scrolled { border-bottom-color: var(--c-border); box-shadow: 0 6px 20px -16px rgb(16 27 63 / 0.25); }
+  .header__inner { height: var(--header-h); display: flex; align-items: center; gap: var(--s-6); }
+  .header__nav { margin-inline: auto; display: none; }
+  .header__nav ul { display: flex; gap: 4px; }
+  .header__nav a {
+    display: inline-flex; align-items: center; height: 40px; padding: 0 14px;
+    font-size: var(--fs-sm); font-weight: 600; color: var(--c-ink-2);
+    border-radius: var(--r-sm);
+    transition: color var(--dur-1), background-color var(--dur-1);
+  }
+  .header__nav a:hover { color: var(--c-navy); background: var(--c-pale); }
+  .header__nav a[aria-current='page'] { color: var(--c-cobalt); background: var(--c-pale); }
+  .is-wide-only { display: none; }
+
+  .header__actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .header__cta { display: none; }
+  .header__menu-btn {
+    display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md);
+    color: var(--c-navy); border: 1px solid var(--c-border); background: #fff;
+  }
+  .header__menu-btn:hover { background: var(--c-pale); }
+  .header__menu-btn svg { width: 22px; height: 22px; }
+
+  @media (min-width: 900px) {
+    .header__nav { display: block; }
+    .header__actions { margin-left: 0; }
+    .header__cta { display: inline-flex; }
+  }
+  @media (min-width: 1120px) {
+    .is-wide-only { display: list-item; }
+    .header__menu-btn { display: none; }
+  }
+
+  /* Menu sheet content */
+  .menu__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--s-4); }
+  .menu__list { display: grid; gap: 4px; }
+  .menu__list a {
+    display: flex; align-items: center; gap: 14px; min-height: 56px; padding: 6px 10px;
+    border-radius: var(--r-md); font-weight: 700; font-size: var(--fs-md);
+  }
+  .menu__list a:hover, .menu__list a[aria-current='page'] { background: var(--c-pale); }
+  .menu__list a[aria-current='page'] { color: var(--c-cobalt); }
+  .menu__icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--c-tint); color: var(--c-cobalt); }
+  .menu__icon :global(svg) { width: 20px; height: 20px; }
+  .menu__list :global(.menu__chev) { margin-left: auto; width: 18px; height: 18px; color: var(--c-ink-3); }
+  .menu__list .badge { margin-left: 4px; }
+  .menu__links {
+    display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: var(--s-5); padding-top: var(--s-4);
+    border-top: 1px solid var(--c-border); font-size: var(--fs-sm); color: var(--c-ink-2);
+  }
+  .menu__links a { display: inline-block; padding: 6px 0; font-weight: 600; }
+  .menu__soon { display: inline-block; padding: 6px 0; color: var(--c-ink-3); }
+  .menu__soon small { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; margin-left: 2px; }
+</style>

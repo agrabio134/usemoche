@@ -1,0 +1,59 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { nav, footerLinks, disclaimer } from '../content/site-content';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="container">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <Logo tone="light" />
+        <p>Crypto research tools with a friendly face. Mention <span class="footer__cmd">@usemoche</span> on X to get started.</p>
+      </div>
+      <nav aria-label="Site" class="footer__col">
+        <h2>Explore</h2>
+        <ul role="list">
+          {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+        </ul>
+      </nav>
+      <nav aria-label="Resources" class="footer__col">
+        <h2>Resources</h2>
+        <ul role="list">
+          {footerLinks.map((l) =>
+            l.href ? (
+              <li><a href={l.href} target="_blank" rel="noopener noreferrer">{l.label} <Icon name="external" size={14} /></a></li>
+            ) : (
+              <li><span class="footer__soon">{l.label} <small>Soon</small></span></li>
+            )
+          )}
+        </ul>
+      </nav>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__disclaimer">{disclaimer}</p>
+      <p class="footer__copy">© {year} usemoche</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--c-navy); color: #c9d4ee; padding-block: var(--s-10) var(--s-8); }
+  .footer__top { display: grid; gap: var(--s-8); }
+  .footer__brand p { margin-top: var(--s-4); max-width: 340px; font-size: var(--fs-sm); line-height: 1.6; }
+  .footer__cmd { font-family: var(--font-mono); color: #fff; font-weight: 600; }
+  .footer__col h2 { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.1em; color: #8a9bc6; font-weight: 700; margin-bottom: var(--s-3); }
+  .footer__col ul { display: grid; gap: 2px; }
+  .footer__col a, .footer__soon { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; font-size: var(--fs-sm); font-weight: 600; }
+  .footer__col a { color: #fff; }
+  .footer__col a:hover { color: var(--c-sky); }
+  .footer__soon { color: #8a9bc6; }
+  .footer__soon small { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid rgb(255 255 255 / 0.18); padding: 1px 6px; border-radius: 999px; }
+  .footer__bottom { margin-top: var(--s-9); padding-top: var(--s-6); border-top: 1px solid rgb(255 255 255 / 0.1); display: grid; gap: var(--s-3); font-size: var(--fs-xs); color: #8a9bc6; line-height: 1.6; }
+  .footer__disclaimer { max-width: 760px; }
+  .footer :global(a:focus-visible) { box-shadow: 0 0 0 2px var(--c-navy), 0 0 0 4px var(--c-sky); }
+  @media (min-width: 760px) {
+    .footer__top { grid-template-columns: 1.6fr 1fr 1fr; }
+    .footer__bottom { grid-template-columns: 1fr auto; align-items: end; }
+  }
+</style>
