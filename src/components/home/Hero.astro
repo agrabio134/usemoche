@@ -38,10 +38,10 @@ const checkRows = c.rows.map((r) => ({
     <picture class="hero__mascot" aria-hidden="true">
       <source
         media="(min-width: 900px)"
-        srcset="/images/moche-hero-d-640.webp 640w, /images/moche-hero-d-960.webp 960w"
-        sizes="460px"
-        width="640"
-        height="633"
+        srcset="/images/moche-rest-d-560.webp 560w, /images/moche-rest-d-840.webp 840w"
+        sizes="480px"
+        width="560"
+        height="347"
       />
       <img
         src="/images/moche-peek-m-400.webp"
@@ -53,6 +53,9 @@ const checkRows = c.rows.map((r) => ({
         fetchpriority="high"
         decoding="async"
       />
+      <svg class="hero__whoosh" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M22 6 L27 17" /><path d="M6 21 L17 25" />
+      </svg>
     </picture>
 
     <!-- Mobile: quick command rows (open a sheet with copy + preview) -->
@@ -173,6 +176,7 @@ const checkRows = c.rows.map((r) => ({
     width: min(48vw, 220px);
   }
   .hero__mascot img { width: 100%; height: auto; }
+  .hero__whoosh { display: none; }
 
   .cmdrows { position: relative; z-index: 2; display: grid; gap: 10px; margin-top: 22px; }
   .cmdrow {
@@ -200,28 +204,30 @@ const checkRows = c.rows.map((r) => ({
   @media (min-width: 900px) {
     .hero { padding-top: clamp(28px, 3vw, 48px); padding-bottom: 16px; }
     .hero__wrap { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); }
-    .hero__copy { grid-column: 1; grid-row: 1; padding-bottom: 28px; }
+    .hero__copy { grid-column: 1; grid-row: 1; padding-bottom: 32px; align-self: end; }
     .hero__l2, .hero__lead { max-width: none; }
     .hero__lead { max-width: 40ch; }
     .hero__mascot {
-      position: relative; right: auto; top: auto;
+      position: relative; right: auto; top: auto; bottom: auto; display: block;
       grid-column: 2; grid-row: 1;
       justify-self: end; align-self: end;
-      width: min(460px, 40vw);
-      margin: -10px 28px -150px 0;   /* body tucks behind the card */
+      width: min(480px, 40vw);
+      margin: 0 36px -1px 0;        /* bottom edge sits exactly on the card */
+      z-index: 3;
     }
+    .hero__whoosh { display: block; position: absolute; left: 13%; top: 4%; width: 13%; color: var(--c-cobalt); }
     .cmdrows { display: none; }
 
     .demo {
       grid-column: 1 / -1; grid-row: 2;
       position: relative; z-index: 2;
       display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr); gap: 20px;
-      padding: 20px; padding-top: 22px;
+      padding: 20px; padding-top: 52px;
       background: #fff;
       border: 1px solid var(--c-border); border-radius: var(--r-xl);
       box-shadow: var(--sh-3);
     }
-    .demo__badge { position: absolute; top: -13px; right: 22px; background: #fff; }
+    .demo__badge { position: absolute; top: 16px; right: 20px; background: #fff; }
 
     .demo__left { padding: 16px; border-radius: var(--r-lg); background: var(--c-surface-2); border: 1px solid var(--c-border); display: grid; gap: 14px; align-content: start; }
     .tabs { display: inline-flex; gap: 6px; justify-self: start; }
