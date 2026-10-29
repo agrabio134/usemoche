@@ -39,7 +39,7 @@ export const copyTradingAccess = {
 
 /** Public links. `null` = not published yet (rendered as "Soon", not as a link). */
 export const links: Record<'x' | 'docs' | 'support' | 'terms' | 'privacy', MaybeUrl> = {
-  x: null, // e.g. 'https://x.com/<official-handle>' — only once confirmed
+  x: 'https://x.com/usemoche',
   docs: null,
   support: null,
   terms: null,

@@ -2,6 +2,7 @@
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import { nav, type NavId, footerLinks } from '../content/site-content';
+import { links } from '../config/site';
 
 interface Props { current: NavId }
 const { current } = Astro.props;
@@ -29,6 +30,11 @@ const desktopLinks = [
     </nav>
 
     <div class="header__actions">
+      {links.x && (
+        <a href={links.x} class="header__x" target="_blank" rel="noopener noreferrer" aria-label="usemoche on X">
+          <Icon name="x-logo" />
+        </a>
+      )}
       <a href="/products/" class="btn btn--primary btn--sm header__cta">
         Explore Products <Icon name="arrow-right" />
       </a>
@@ -111,6 +117,12 @@ const desktopLinks = [
 
   .header__actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
   .header__cta { display: none; }
+  .header__x {
+    display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md);
+    color: var(--c-navy); border: 1px solid var(--c-border); background: #fff;
+  }
+  .header__x:hover { background: var(--c-pale); }
+  .header__x :global(svg) { width: 18px; height: 18px; }
   .header__menu-btn {
     display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md);
     color: var(--c-navy); border: 1px solid var(--c-border); background: #fff;

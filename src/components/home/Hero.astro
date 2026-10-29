@@ -1,85 +1,138 @@
 ---
 import Icon from '../Icon.astro';
 import CopyButton from '../CopyButton.astro';
-import SignalReply from '../SignalReply.astro';
-import CheckReply from '../CheckReply.astro';
 import { brand } from '../../config/site';
 import { previews } from '../../content/site-content';
+
+const s = previews.signal;
+const c = previews.check;
+
+/** Rows shown in the desktop preview panel. Each row expands to its note. */
+const signalRows = [
+  { status: 'warn', icon: 'clock', label: `Assessment: ${s.assessment}`, note: s.reasons[0] },
+  { status: 'info', icon: 'signal', label: `Confidence: ${s.confidence}`, note: s.reasons[2] },
+  { status: 'warn', icon: 'alert', label: 'Risk context', note: s.risk },
+];
+const checkRows = c.rows.map((r) => ({
+  status: r.status,
+  icon: r.status === 'ok' ? 'check' : 'alert',
+  label: r.label,
+  note: r.note,
+}));
 ---
 <section class="hero" aria-labelledby="hero-title">
-  <div class="container">
-    <div class="hero__top">
-      <div class="hero__copy">
-        <h1 id="hero-title" class="h1">
-          Meet <span class="accent">Moche<span class="tight">.</span></span>
-          <span class="hero__sub-h">Your crypto research companion.</span>
-        </h1>
-        <p class="lead">Trading signals, token and wallet checks, and tools to follow the wallets that matter.</p>
-        <div class="btn-row">
-          <a href="/products/" class="btn btn--primary">Explore Products <Icon name="arrow-right" /></a>
-          <a href="#how-it-works" class="btn btn--secondary">How It Works</a>
-        </div>
-      </div>
-      <div class="hero__mascot" aria-hidden="true">
-        <img
-          src="/images/moche-wave-560.webp"
-          srcset="/images/moche-wave-360.webp 360w, /images/moche-wave-560.webp 560w"
-          sizes="(min-width: 900px) 360px, 160px"
-          width="560"
-          height="553"
-          alt=""
-          fetchpriority="high"
-          decoding="async"
-        />
+  <div class="container hero__wrap">
+    <div class="hero__copy">
+      <h1 id="hero-title" class="hero__h1">
+        <span class="hero__l1">Meet <span class="accent">Moche<span class="tight">.</span></span></span>
+        <span class="hero__l2">Your crypto research companion.</span>
+      </h1>
+      <p class="hero__lead">Trading signals, token and wallet checks, and tools to follow the wallets that matter.</p>
+      <div class="btn-row hero__btns">
+        <a href="/products/" class="btn btn--primary">Explore Products <Icon name="arrow-right" /></a>
+        <a href="#how-it-works" class="btn btn--secondary">How It Works</a>
       </div>
     </div>
 
-    <div class="demo card" data-tabs>
+    <!-- Different artwork per breakpoint: a tight "peek" crop on phones, the full figure on desktop -->
+    <picture class="hero__mascot" aria-hidden="true">
+      <source
+        media="(min-width: 900px)"
+        srcset="/images/moche-hero-d-640.webp 640w, /images/moche-hero-d-960.webp 960w"
+        sizes="460px"
+        width="640"
+        height="633"
+      />
+      <img
+        src="/images/moche-peek-m-400.webp"
+        srcset="/images/moche-peek-m-240.webp 240w, /images/moche-peek-m-400.webp 400w"
+        sizes="200px"
+        width="400"
+        height="301"
+        alt=""
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
+
+    <!-- Mobile: quick command rows (open a sheet with copy + preview) -->
+    <ul role="list" class="cmdrows">
+      <li>
+        <button type="button" class="cmdrow" data-sheet-open="sheet-signal" aria-label={`Use ${brand.commands.signal}`}>
+          <span class="cmdrow__ic"><Icon name="signal" /></span>
+          <span class="cmdrow__t">{brand.commands.signal}</span>
+          <Icon name="chevron-right" class="cmdrow__chev" />
+        </button>
+      </li>
+      <li>
+        <button type="button" class="cmdrow" data-sheet-open="sheet-check" aria-label={`Use ${brand.commands.check}`}>
+          <span class="cmdrow__ic"><Icon name="shield" /></span>
+          <span class="cmdrow__t">{brand.commands.check}</span>
+          <Icon name="chevron-right" class="cmdrow__chev" />
+        </button>
+      </li>
+    </ul>
+
+    <!-- Desktop: interactive command preview -->
+    <div class="demo" data-tabs>
+      <span class="badge badge--preview demo__badge">Illustrative preview</span>
       <div class="demo__left">
         <div class="tabs" role="tablist" aria-label="Command preview">
-          <button type="button" role="tab" id="tab-signal" aria-selected="true" aria-controls="prev-signal inc-signal" data-command={brand.commands.signal}>
+          <button type="button" role="tab" id="tab-signal" aria-selected="true" aria-controls="prev-signal" data-command={brand.commands.signal}>
             <Icon name="signal" /> signal
           </button>
-          <button type="button" role="tab" id="tab-check" aria-selected="false" tabindex="-1" aria-controls="prev-check inc-check" data-command={brand.commands.check}>
+          <button type="button" role="tab" id="tab-check" aria-selected="false" tabindex="-1" aria-controls="prev-check" data-command={brand.commands.check}>
             <Icon name="shield" /> check
           </button>
         </div>
-
-        <p class="demo__label" id="cmd-label">Reply under a post on X with</p>
         <div class="cmdbox">
           <span class="cmdbox__caret" aria-hidden="true"><Icon name="chevron-right" /></span>
-          <code id="hero-cmd" class="cmdbox__text" data-tab-command aria-labelledby="cmd-label hero-cmd">{brand.commands.signal}</code>
+          <code id="hero-cmd" class="cmdbox__text" data-tab-command>{brand.commands.signal}</code>
           <CopyButton text={brand.commands.signal} variant="icon" targetId="hero-cmd" tabLinked />
         </div>
-        <p class="demo__hint">
-          <Icon name="info" /> Works under posts that mention a token. If Moche can’t tell which token, it asks for the contract address.
-        </p>
-        <div class="includes" id="inc-signal">
-          <p class="includes__h">The reply can include</p>
-          <ul role="list">
-            <li><Icon name="scale" /> Buy / Sell / Wait</li>
-            <li><Icon name="message" /> Supporting reasons</li>
-            <li><Icon name="signal" /> Confidence level</li>
-            <li><Icon name="alert" /> Risk context</li>
-          </ul>
-        </div>
-        <div class="includes" id="inc-check" hidden>
-          <p class="includes__h">The reply can cover</p>
-          <ul role="list">
-            <li><Icon name="key" /> Token permissions</li>
-            <li><Icon name="pie" /> Holder concentration</li>
-            <li><Icon name="droplet" /> Liquidity risks</li>
-            <li><Icon name="activity" /> Wallet activity</li>
-          </ul>
-        </div>
+        <p class="demo__hint">Reply with this under a post on X. If Moche can’t tell which token, it asks for the contract address.</p>
       </div>
 
       <div class="demo__right">
-        <div id="prev-signal" role="tabpanel" aria-labelledby="tab-signal" tabindex="0">
-          <SignalReply compact />
+        <div id="prev-signal" role="tabpanel" aria-labelledby="tab-signal" class="ov">
+          <div class="ov__head">
+            <p class="ov__title">Signal overview</p>
+            <span class="badge badge--warn">{s.assessment}</span>
+          </div>
+          <ul role="list" class="ov__rows">
+            {signalRows.map((r) => (
+              <li>
+                <details>
+                  <summary>
+                    <span class:list={['st', `st--${r.status}`]}><Icon name={r.icon} /></span>
+                    <span class="ov__label">{r.label}</span>
+                    <Icon name="chevron-right" class="ov__chev" />
+                  </summary>
+                  <p class="ov__note">{r.note}</p>
+                </details>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div id="prev-check" role="tabpanel" aria-labelledby="tab-check" tabindex="0" hidden>
-          <CheckReply compact />
+        <div id="prev-check" role="tabpanel" aria-labelledby="tab-check" class="ov" hidden>
+          <div class="ov__head">
+            <p class="ov__title">Risk overview</p>
+            <span class="ov__meta">Risk <strong>{c.riskEstimate}</strong> · Confidence <strong>{c.confidence}</strong></span>
+          </div>
+          <ul role="list" class="ov__rows">
+            {checkRows.map((r) => (
+              <li>
+                <details>
+                  <summary>
+                    <span class:list={['st', `st--${r.status}`]}><Icon name={r.icon} /></span>
+                    <span class="ov__label">{r.label}</span>
+                    <Icon name="chevron-right" class="ov__chev" />
+                  </summary>
+                  <p class="ov__note">{r.note}</p>
+                </details>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
@@ -89,83 +142,131 @@ import { previews } from '../../content/site-content';
 <style>
   .hero {
     position: relative;
-    padding-top: clamp(20px, 3vw, 48px);
-    padding-bottom: clamp(40px, 5vw, 72px);
+    overflow: hidden;
+    padding-top: 20px;
+    padding-bottom: 8px;
     background:
-      radial-gradient(900px 420px at 88% 0%, rgb(120 184 255 / 0.28), transparent 65%),
-      linear-gradient(180deg, var(--c-pale) 0%, #f6faff 70%, #fff 100%);
+      radial-gradient(700px 360px at 92% 0%, rgb(120 184 255 / 0.30), transparent 65%),
+      linear-gradient(180deg, var(--c-pale) 0%, #f4f9ff 100%);
   }
-  .hero__top { display: grid; grid-template-columns: minmax(0, 1fr); position: relative; }
-  .hero__copy { position: relative; z-index: 2; }
-  .hero .h1 { font-size: clamp(2.25rem, 1.2rem + 4vw, 4.5rem); }
-  .hero__sub-h {
-    display: block; margin-top: 0.12em;
-    font-size: 0.62em; line-height: 1.12; letter-spacing: -0.03em; color: var(--c-navy);
-  }
-  .hero .lead { margin-top: var(--s-4); max-width: 34ch; }
-  .hero .btn-row { margin-top: var(--s-6); }
+  .hero__wrap { position: relative; display: grid; }
 
-  /* Mascot peeks over the demo card */
-  .hero__mascot {
-    justify-self: end;
-    width: clamp(120px, 31vw, 170px);
-    margin-top: -14px;
-    margin-bottom: -26px;  /* tuck behind the card edge */
-    margin-right: clamp(4px, 3vw, 24px);
-    position: relative; z-index: 1;
+  /* ---------- Type ---------- */
+  .hero__h1 { font-weight: 800; letter-spacing: -0.04em; line-height: 1.02; }
+  .hero__l1 { display: block; font-size: clamp(2.375rem, 1.4rem + 4.4vw, 5rem); }
+  .hero__l2 {
+    display: block; margin-top: 0.18em;
+    font-size: clamp(1.25rem, 0.9rem + 1.7vw, 2.5rem); line-height: 1.1; letter-spacing: -0.03em;
   }
-  .hero__mascot img { width: 100%; height: auto; aspect-ratio: 560 / 553; }
-
-  .demo {
-    position: relative; z-index: 2;
-    padding: var(--s-4);
-    display: grid; gap: var(--s-5);
-    box-shadow: var(--sh-3);
-    border-radius: var(--r-xl);
-  }
-  .tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--c-surface-2); border: 1px solid var(--c-border); border-radius: var(--r-md); }
-  .tabs [role='tab'] {
-    display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px;
-    border-radius: 11px; font-weight: 700; font-size: var(--fs-sm); color: var(--c-ink-2);
-    transition: background-color var(--dur-1), color var(--dur-1), box-shadow var(--dur-1);
-  }
-  .tabs [role='tab'] :global(svg) { width: 18px; height: 18px; }
-  .tabs [role='tab']:hover { color: var(--c-navy); }
-  .tabs [role='tab'][aria-selected='true'] { background: var(--c-cobalt); color: #fff; box-shadow: var(--sh-cta); }
-
-  .demo__label { margin-top: var(--s-4); font-size: var(--fs-sm); font-weight: 600; color: var(--c-ink-3); }
-  .cmdbox {
-    margin-top: var(--s-2);
-    display: flex; align-items: center; gap: 10px;
-    min-height: 60px; padding: 8px 8px 8px 14px;
-    background: var(--c-pale); border: 1.5px solid var(--c-tint-2); border-radius: var(--r-lg);
-  }
-  .cmdbox__caret { color: var(--c-cobalt); display: grid; }
-  .cmdbox__caret :global(svg) { width: 18px; height: 18px; }
-  .cmdbox__text { font-family: var(--font-mono); font-size: clamp(1rem, 0.9rem + 0.5vw, 1.25rem); font-weight: 700; color: var(--c-navy); flex: 1; min-width: 0; overflow-wrap: anywhere; }
-  .demo__hint { display: flex; gap: 8px; margin-top: var(--s-3); font-size: var(--fs-xs); color: var(--c-ink-3); line-height: 1.5; }
-  .demo__hint :global(svg) { width: 16px; height: 16px; flex: none; margin-top: 1px; }
-  .demo__right [role='tabpanel'] { border-radius: var(--r-lg); padding: var(--s-4); border: 1px solid var(--c-border); background: #fff; }
-  .demo__right [role='tabpanel']:focus-visible { box-shadow: var(--focus-ring); outline: none; }
-
   .tight { margin-left: -0.06em; }
-  .includes { display: none; margin-top: var(--s-6); padding-top: var(--s-5); border-top: 1px dashed var(--c-border); }
-  .includes[hidden] { display: none !important; }
-  .includes__h { font-size: var(--fs-xs); font-weight: 700; color: var(--c-ink-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
-  .includes ul { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; font-size: var(--fs-sm); font-weight: 600; }
-  .includes li { display: flex; align-items: center; gap: 8px; }
-  .includes :global(svg) { width: 18px; height: 18px; color: var(--c-cobalt); flex: none; }
-  @media (min-width: 640px) {
-    .demo { padding: var(--s-6); }
+  .hero__lead { margin-top: 10px; color: var(--c-ink-2); font-size: clamp(0.875rem, 0.7rem + 0.6vw, 1.25rem); line-height: 1.5; }
+  .hero__btns { margin-top: 22px; }
+
+  /* ---------- Mobile (default) ---------- */
+  .hero__copy { position: relative; z-index: 2; }
+  .hero__l2, .hero__lead { max-width: 58%; }
+  .hero__btns { display: none; }
+  .hero__mascot {
+    position: absolute; z-index: 1;
+    right: calc(var(--gutter) * -1 - 10px);
+    bottom: 112px;            /* = command rows height (130px) minus 18px overlap */
+    width: min(48vw, 220px);
   }
+  .hero__mascot img { width: 100%; height: auto; }
+
+  .cmdrows { position: relative; z-index: 2; display: grid; gap: 10px; margin-top: 22px; }
+  .cmdrow {
+    width: 100%; display: flex; align-items: center; gap: 12px;
+    min-height: 60px; padding: 10px 14px 10px 10px;
+    background: #fff; border: 1px solid var(--c-border); border-radius: var(--r-lg);
+    box-shadow: var(--sh-2); text-align: left;
+    transition: border-color var(--dur-1), background-color var(--dur-1);
+  }
+  .cmdrow:hover { border-color: var(--c-tint-2); }
+  .cmdrow:active { background: var(--c-surface-2); }
+  .cmdrow__ic { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--c-tint); color: var(--c-cobalt); flex: none; }
+  .cmdrow__ic :global(svg) { width: 20px; height: 20px; }
+  .cmdrow__t { flex: 1; font-weight: 700; font-size: 1rem; color: var(--c-navy); }
+  .cmdrow :global(.cmdrow__chev) { width: 18px; height: 18px; color: var(--c-ink-3); }
+
+  .demo { display: none; }
+
+  @media (min-width: 560px) {
+    .hero__btns { display: flex; }
+    .hero__l2, .hero__lead { max-width: 62%; }
+  }
+
+  /* ---------- Desktop ---------- */
   @media (min-width: 900px) {
-    .hero__top { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); align-items: end; }
-    .hero__mascot { width: min(360px, 100%); margin: 0 clamp(0px, 3vw, 40px) -44px 0; }
-    .hero .lead { max-width: 44ch; }
-    .demo { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: var(--s-7); padding: var(--s-7); align-items: start; }
-    .demo__right [role='tabpanel'] { background: var(--c-surface-2); border-color: transparent; padding: var(--s-5); }
-    .demo__right :global(.stat) { background: #fff; }
-    .demo__right :global(.rows) { background: #fff; }
-    .includes { display: block; }
+    .hero { padding-top: clamp(28px, 3vw, 48px); padding-bottom: 16px; }
+    .hero__wrap { grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr); }
+    .hero__copy { grid-column: 1; grid-row: 1; padding-bottom: 28px; }
+    .hero__l2, .hero__lead { max-width: none; }
+    .hero__lead { max-width: 40ch; }
+    .hero__mascot {
+      position: relative; right: auto; top: auto;
+      grid-column: 2; grid-row: 1;
+      justify-self: end; align-self: end;
+      width: min(460px, 40vw);
+      margin: -10px 28px -150px 0;   /* body tucks behind the card */
+    }
+    .cmdrows { display: none; }
+
+    .demo {
+      grid-column: 1 / -1; grid-row: 2;
+      position: relative; z-index: 2;
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr); gap: 20px;
+      padding: 20px; padding-top: 22px;
+      background: #fff;
+      border: 1px solid var(--c-border); border-radius: var(--r-xl);
+      box-shadow: var(--sh-3);
+    }
+    .demo__badge { position: absolute; top: -13px; right: 22px; background: #fff; }
+
+    .demo__left { padding: 16px; border-radius: var(--r-lg); background: var(--c-surface-2); border: 1px solid var(--c-border); display: grid; gap: 14px; align-content: start; }
+    .tabs { display: inline-flex; gap: 6px; justify-self: start; }
+    .tabs [role='tab'] {
+      display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 18px;
+      border-radius: 12px; font-weight: 700; font-size: var(--fs-sm); color: var(--c-ink-2);
+      background: #fff; border: 1px solid var(--c-border);
+      transition: background-color var(--dur-1), color var(--dur-1), box-shadow var(--dur-1);
+    }
+    .tabs [role='tab'] :global(svg) { width: 18px; height: 18px; }
+    .tabs [role='tab']:hover { color: var(--c-navy); }
+    .tabs [role='tab'][aria-selected='true'] { background: var(--c-cobalt); border-color: var(--c-cobalt); color: #fff; box-shadow: var(--sh-cta); }
+
+    .cmdbox {
+      display: flex; align-items: center; gap: 10px;
+      min-height: 60px; padding: 8px 8px 8px 16px;
+      background: #fff; border: 1.5px solid var(--c-tint-2); border-radius: var(--r-lg);
+    }
+    .cmdbox__caret { color: var(--c-ink-2); display: grid; }
+    .cmdbox__caret :global(svg) { width: 18px; height: 18px; }
+    .cmdbox__text { font-family: var(--font-sans); font-size: 1.1875rem; font-weight: 600; color: var(--c-navy); flex: 1; min-width: 0; letter-spacing: -0.01em; }
+    .demo__hint { font-size: var(--fs-xs); color: var(--c-ink-3); line-height: 1.5; }
+
+    .ov { height: 100%; padding: 16px 18px; border-radius: var(--r-lg); background: #fff; border: 1px solid var(--c-border); }
+    .ov__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+    .ov__title { font-weight: 800; font-size: 1.0625rem; }
+    .ov__meta { font-size: var(--fs-xs); color: var(--c-ink-3); }
+    .ov__meta strong { color: var(--c-ink); }
+    .ov__rows li + li { border-top: 1px solid var(--c-border); }
+    .ov__rows summary {
+      list-style: none; cursor: pointer;
+      display: flex; align-items: center; gap: 12px; min-height: 42px;
+      font-size: var(--fs-sm); font-weight: 500; color: var(--c-ink);
+      border-radius: 8px;
+    }
+    .ov__rows summary::-webkit-details-marker { display: none; }
+    .ov__rows summary:hover .ov__label { color: var(--c-cobalt); }
+    .ov__label { flex: 1; }
+    .ov__rows :global(.ov__chev) { width: 16px; height: 16px; color: var(--c-ink-3); transition: transform var(--dur-2) var(--ease); }
+    .ov__rows details[open] :global(.ov__chev) { transform: rotate(90deg); }
+    .ov__note { padding: 0 0 10px 34px; font-size: var(--fs-xs); color: var(--c-ink-2); line-height: 1.5; }
+    .st { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; flex: none; color: #fff; }
+    .st :global(svg) { width: 13px; height: 13px; stroke-width: 2.8; }
+    .st--ok { background: #22a06b; }
+    .st--warn { background: var(--c-warn-dot); }
+    .st--info { background: var(--c-cobalt); }
   }
 </style>

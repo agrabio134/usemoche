@@ -24,7 +24,8 @@ const fullTitle = current === 'home' ? title : `${title} · usemoche`;
     <meta property="og:type" content="website" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:image" content={new URL("/og-image.jpg", Astro.site ?? Astro.url).href} />
+    <meta name="twitter:site" content="@usemoche" />
     <meta name="twitter:card" content="summary_large_image" />
     {preloadHero && (
       <link

@@ -1,39 +1,45 @@
 ---
 import Icon from '../Icon.astro';
 import CommandSheet from '../CommandSheet.astro';
+import SignalReply from '../SignalReply.astro';
+import CheckReply from '../CheckReply.astro';
 import { products } from '../../content/site-content';
-import { brand } from '../../config/site';
+import { brand, copyTradingAccess } from '../../config/site';
+const minShort = `${copyTradingAccess.minimumHolding / 1_000_000}M`;
 ---
-<section class="section toolkit" id="tools" aria-labelledby="toolkit-title">
+<section class="toolkit" id="tools" aria-labelledby="toolkit-title">
   <div class="container">
-    <div class="section-head">
+    <div class="tk__head">
       <h2 id="toolkit-title" class="h2">Your research toolkit</h2>
-      <p class="lead">Four tools that help you look before you leap, from a quick check in a reply to following wallets you trust.</p>
+      <p>Powerful tools to help you navigate crypto with more clarity.</p>
     </div>
 
     <ul role="list" class="tk">
       {products.map((p) => (
-        <li class:list={['tk__item', `tk__item--${p.id}`]}>
-          <span class:list={['icon-tile', { 'icon-tile--solid': p.id === 'signal' || p.id === 'check' }]}><Icon name={p.icon} /></span>
-          <div class="tk__body">
-            <h3 class="h3"><a href={p.href} class="tk__link">{p.name}</a></h3>
-            <p>{p.summary}</p>
-            <div class="tk__meta">
-              {'command' in p && (
-                <>
-                  <span class="cmd">{p.command}</span>
-                  <button type="button" class="tk__use" data-sheet-open={`sheet-${p.id}`} aria-label={`How to use ${p.command}`}>
-                    <Icon name="copy" size={16} /> Use command
-                  </button>
-                </>
-              )}
-              {'badge' in p && <span class:list={['badge', `badge--${p.badge.tone}`]}>{p.badge.tone === 'holder' && <Icon name="coins" />}{p.badge.text}</span>}
-            </div>
-          </div>
-          <Icon name="chevron-right" class="tk__chev" />
+        <li>
+          <a href={p.href} class:list={['tk__item', `tk__item--${p.id}`]}>
+            <span class:list={['tk__ic', { 'tk__ic--solid': p.id === 'signal' }]}><Icon name={p.icon} /></span>
+            <span class="tk__body">
+              <span class="tk__name">{p.name}</span>
+              <span class="tk__desc">{p.short}</span>
+            </span>
+            {'badge' in p && (
+              <span class:list={['tk__badge', `tk__badge--${p.badge.tone}`]}>
+                {p.badge.tone === 'holder' ? (<><strong>{minShort} MOCHE</strong><span>for free access</span></>) : p.badge.text}
+              </span>
+            )}
+            <Icon name="chevron-right" class="tk__chev" />
+          </a>
         </li>
       ))}
     </ul>
+
+    <a href="/copy-trading/#access" class="hbar">
+      <span class="hbar__ic"><Icon name="coins" /></span>
+      <span class="hbar__sep" aria-hidden="true"></span>
+      <span class="hbar__t">Hold {minShort} MOCHE. <span>Unlock free copy trading.</span></span>
+      <Icon name="chevron-right" class="hbar__chev" />
+    </a>
   </div>
 </section>
 
@@ -49,7 +55,9 @@ import { brand } from '../../config/site';
   ]}
   note="Signals are research, not instructions. Moche never places trades for you."
   href="/products/#signal"
-/>
+>
+  <SignalReply compact />
+</CommandSheet>
 <CommandSheet
   id="sheet-check"
   title="Token & Wallet Check"
@@ -62,42 +70,68 @@ import { brand } from '../../config/site';
   ]}
   note="A low risk estimate is not a guarantee of safety. If the token can’t be identified, Moche asks for its contract address."
   href="/products/#check"
-/>
+>
+  <CheckReply compact />
+</CommandSheet>
 
 <style>
-  .toolkit { padding-top: clamp(40px, 3rem + 2vw, 80px); }
-  .tk { display: grid; gap: 12px; }
+  .toolkit { padding: 36px 0 var(--section-y); background: linear-gradient(180deg, #f4f9ff 0%, #fff 220px); }
+  .tk__head { margin-bottom: 16px; }
+  .tk__head p { margin-top: 6px; color: var(--c-ink-2); font-size: var(--fs-md); }
+
+  .tk { display: grid; gap: 10px; }
   .tk__item {
-    position: relative;
-    display: flex; gap: 14px; align-items: flex-start;
-    padding: 16px; background: #fff;
-    border: 1px solid var(--c-border); border-radius: var(--r-lg);
+    display: flex; align-items: center; gap: 14px;
+    min-height: 76px; padding: 12px 14px 12px 12px;
+    background: #fff; border: 1px solid var(--c-border); border-radius: var(--r-lg);
     box-shadow: var(--sh-1);
-    transition: border-color var(--dur-1), box-shadow var(--dur-2), transform var(--dur-2) var(--ease);
+    transition: border-color var(--dur-1), box-shadow var(--dur-2);
   }
   .tk__item:hover { border-color: #c8d6ec; box-shadow: var(--sh-2); }
-  .tk__item:has(.tk__link:focus-visible) { box-shadow: var(--focus-ring); }
-  .tk__link { color: inherit; }
-  .tk__link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
-  .tk__link:focus-visible { box-shadow: none; }
-  .tk__body { flex: 1; min-width: 0; display: grid; gap: 4px; }
-  .tk__body p { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: 1.5; }
-  .tk__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; }
-  .tk__use {
-    position: relative; z-index: 1;
-    display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px;
-    font-size: var(--fs-xs); font-weight: 700; color: var(--c-cobalt);
-    border-radius: var(--r-pill); border: 1px solid var(--c-tint-2); background: #fff;
-  }
-  .tk__use:hover { background: var(--c-pale); }
-  .tk :global(.tk__chev) { width: 20px; height: 20px; color: var(--c-ink-3); flex: none; align-self: center; transition: transform var(--dur-2) var(--ease), color var(--dur-1); }
+  .tk__item--launchpad .tk__ic { background: var(--c-tint); }
+  .tk__ic { display: grid; place-items: center; flex: none; width: 48px; height: 48px; border-radius: 14px; background: var(--c-tint); color: var(--c-cobalt); }
+  .tk__ic :global(svg) { width: 24px; height: 24px; }
+  .tk__ic--solid { background: var(--c-cobalt); color: #fff; }
+  .tk__body { flex: 1; min-width: 0; display: grid; gap: 2px; }
+  .tk__name { font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; color: var(--c-navy); }
+  .tk__desc { font-size: var(--fs-sm); color: var(--c-ink-2); line-height: 1.4; }
+  .tk__badge { flex: none; display: grid; text-align: center; line-height: 1.25; padding: 6px 10px; border-radius: 10px; font-size: 0.6875rem; font-weight: 600; }
+  .tk__badge--holder { background: var(--c-tint); color: var(--c-cobalt-press); }
+  .tk__badge--holder strong { font-size: 0.8125rem; font-weight: 800; }
+  .tk__badge--soon { background: #eef1f6; color: var(--c-ink-2); border: 1px solid var(--c-border); font-size: var(--fs-xs); }
+  .tk :global(.tk__chev) { width: 18px; height: 18px; flex: none; color: var(--c-ink-3); transition: transform var(--dur-2) var(--ease), color var(--dur-1); }
   .tk__item:hover :global(.tk__chev) { transform: translateX(3px); color: var(--c-cobalt); }
-  .tk__item--launchpad { background: var(--c-surface-2); }
 
-  @media (min-width: 760px) {
+  .hbar {
+    margin-top: 16px;
+    display: flex; align-items: center; gap: 14px;
+    min-height: 60px; padding: 10px 18px;
+    border-radius: var(--r-lg); color: #fff;
+    background:
+      radial-gradient(400px 120px at 0% 0%, rgb(36 85 245 / 0.45), transparent 70%),
+      var(--c-navy);
+    box-shadow: var(--sh-2);
+  }
+  .hbar:hover { background: radial-gradient(400px 120px at 0% 0%, rgb(36 85 245 / 0.6), transparent 70%), var(--c-navy); }
+  .hbar:focus-visible { box-shadow: var(--focus-ring); }
+  .hbar__ic { display: grid; color: var(--c-sky); }
+  .hbar__ic :global(svg) { width: 22px; height: 22px; }
+  .hbar__sep { width: 1px; height: 24px; background: rgb(255 255 255 / 0.2); }
+  .hbar__t { flex: 1; font-weight: 600; font-size: var(--fs-sm); line-height: 1.35; }
+  .hbar__t span { color: var(--c-sky); }
+  .hbar :global(.hbar__chev) { width: 20px; height: 20px; flex: none; }
+
+  @media (min-width: 900px) {
+    .toolkit { padding-top: 40px; }
+    .tk__head { margin-bottom: 20px; }
+    .tk__head p { font-size: var(--fs-lg); }
     .tk { grid-template-columns: 1fr 1fr; gap: 16px; }
-    .tk__item { padding: 22px; gap: 18px; }
-    .tk .icon-tile { width: 56px; height: 56px; border-radius: 16px; }
-    .tk .icon-tile :global(svg) { width: 26px; height: 26px; }
+    .tk__item { min-height: 92px; padding: 18px 20px 18px 18px; gap: 18px; }
+    .tk__ic { width: 56px; height: 56px; border-radius: 16px; }
+    .tk__ic :global(svg) { width: 26px; height: 26px; }
+    .tk__name { font-size: 1.0625rem; }
+    .hbar { justify-content: center; min-height: 64px; margin-top: 20px; }
+    .hbar__t { flex: 0 1 auto; font-size: var(--fs-md); }
+    .hbar :global(.hbar__chev) { margin-left: auto; }
   }
 </style>
