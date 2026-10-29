@@ -28,14 +28,12 @@ const fullTitle = current === 'home' ? title : `${title} · usemoche`;
     <meta name="twitter:site" content="@usemoche" />
     <meta name="twitter:card" content="summary_large_image" />
     {preloadHero && (
-      <link
-        rel="preload"
-        as="image"
-        type="image/webp"
-        imagesrcset="/images/moche-wave-360.webp 360w, /images/moche-wave-560.webp 560w"
-        imagesizes="(min-width: 900px) 360px, 160px"
-        fetchpriority="high"
-      />
+      <>
+        <link rel="preload" as="image" type="image/webp" media="(max-width: 899.98px)"
+          imagesrcset="/images/moche-peek-m-240.webp 240w, /images/moche-peek-m-400.webp 400w" imagesizes="200px" fetchpriority="high" />
+        <link rel="preload" as="image" type="image/webp" media="(min-width: 900px)"
+          imagesrcset="/images/moche-hero-d-640.webp 640w, /images/moche-hero-d-960.webp 960w" imagesizes="460px" fetchpriority="high" />
+      </>
     )}
   </head>
   <body>
