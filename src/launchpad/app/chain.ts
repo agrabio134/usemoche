@@ -123,7 +123,7 @@ export async function listMarkets(creator?:string){
  const pools=(await Promise.all(configs.map(c=>dbc.state.getPoolsByConfig(c.publicKey)))).flat();
  // Delisted from discovery; direct market access and creator fee claims remain available.
  const delistedPools=new Set(['7hcMR77XyetowGran4V1g25W9Zru5Q6khUspTC2YfXbt']);
- const fresh=pools.filter(p=>p.account.poolState.activationPoint.gten(LISTING_START_UNIX));
+ const fresh=pools.filter(p=>Number(p.account.poolState.activationPoint.toString())>=LISTING_START_UNIX);
  const relevant=creator?fresh.filter(p=>p.account.poolState.creator.toBase58()===creator):fresh.filter(p=>!delistedPools.has(p.publicKey.toBase58()));
  return Promise.all(relevant.sort((a,b)=>b.account.poolState.activationPoint.cmp(a.account.poolState.activationPoint)).slice(0,24).map(p=>loadMarket(p.publicKey.toBase58())));
 }
