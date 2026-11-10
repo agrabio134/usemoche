@@ -4,14 +4,14 @@ import Launchpad from '../launchpad/Launchpad';
 ---
 <Base
   title="Moche Launchpad"
-  description="Launch a Solana token with a Meteora bonding curve. Pair it with HYPE, SOL, USDC or a tokenized stock, and graduate into permanently locked liquidity."
+  description="MochePad: launch a token on Solana, Elysium or Robinhood Chain. Bonding curves paired with HYPE, SOL, ETH, USDC or tokenized stocks, graduating into permanently locked liquidity. Plus callouts from $MOCHE holders."
   current="launchpad"
 >
   <Launchpad client:only="react">
     <div slot="fallback" class="lp-loading">
       <img src="/images/moche-wave-360.webp" width="96" height="95" alt="" />
       <p>Loading the launchpad…</p>
-      <noscript><p>The launchpad needs JavaScript to connect a wallet and read markets from Solana.</p></noscript>
+      <noscript><p>The launchpad needs JavaScript to connect a wallet and read markets on-chain.</p></noscript>
     </div>
   </Launchpad>
 </Base>

@@ -3,7 +3,7 @@ import bs58 from 'bs58';
 import { z } from 'zod';
 import { LAUNCHPAD_TAG } from '../lib/constants';
 
-const wallet=z.string().min(32).max(44).refine(value=>{try{return bs58.decode(value).length===32}catch{return false}});
+const wallet=z.string().min(32).max(44).refine(value=>{if(/^0x[0-9a-fA-F]{40}$/.test(value))return true;try{return bs58.decode(value).length===32}catch{return false}});
 const schema=z.object({address:wallet,image:z.string().max(2_800_000),type:z.enum(['image/png','image/jpeg','image/webp']),name:z.string().trim().min(1).max(32),symbol:z.string().regex(/^[A-Z0-9]{2,10}$/),description:z.string().max(1000),website:z.string().max(200)});
 // Wallet connection is enforced by the UI. An unsigned address is not proof of ownership.
 // These per-instance budgets limit storage use; provider quotas cover aggregate traffic.

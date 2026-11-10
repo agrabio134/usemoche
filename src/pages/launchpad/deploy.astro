@@ -1,0 +1,7 @@
+---
+import Base from '../../layouts/Base.astro';
+import Deploy from '../../launchpad/evm/Deploy';
+---
+<Base title="MochePad owner console" description="Deploy and manage MochePad contracts." current="launchpad" noindex>
+  <Deploy client:only="react" />
+</Base>

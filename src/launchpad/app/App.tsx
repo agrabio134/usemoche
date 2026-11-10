@@ -2,8 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { getWallets } from '@wallet-standard/app';
 import {
   ArrowUpRight, ArrowRight, Search, Rocket, LayoutGrid, ChartNoAxesCombined, Wallet, ShieldCheck,
-  Check, X, RefreshCw, Layers, LockKeyhole, CircleAlert, Zap, BookOpen,
+  Check, X, RefreshCw, Layers, LockKeyhole, CircleAlert, Zap, BookOpen, Megaphone,
 } from 'lucide-react';
+import { Callouts } from '../callouts/Callouts';
 import { CORE_ASSETS, HYPE, PLATFORM_WALLET, MAINNET_GENESIS, type Asset } from '../lib/constants';
 import { OPENING_MARKET_CAP_USD, GRADUATION_MARKET_CAP_USD } from '../lib/launch-policy';
 import { connection, listMarkets, short, type Market, type WalletSession } from './chain';
@@ -16,6 +17,7 @@ const NAV = [
   ['markets', 'Markets', LayoutGrid],
   ['launch', 'Launch', Rocket],
   ['pairs', 'Pairs', ChartNoAxesCombined],
+  ['callouts', 'Callouts', Megaphone],
   ['portfolio', 'My activity', Wallet],
   ['how', 'How it works', BookOpen],
 ] as const;
@@ -149,6 +151,7 @@ export default function App() {
           : base === 'pairs' ? <Pairs assets={assets} catalogError={catalogError} />
           : base === 'portfolio' ? <Portfolio assets={assets} session={session} connect={openWallet} />
           : base === 'how' ? <HowItWorks />
+          : base === 'callouts' ? <Callouts defaultChain="solana" />
           : base === 'market' ? <Trade address={route.slice(7)} assets={assets} {...common} />
           : <Markets assets={assets} />}
       </div>

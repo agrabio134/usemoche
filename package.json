@@ -20,6 +20,7 @@
     "@types/bn.js": "^5.2.0",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
+    "@vercel/blob": "^1.1.1",
     "@wallet-standard/app": "^1.1.0",
     "astro": "^5.18.2",
     "bn.js": "^5.2.5",
@@ -29,6 +30,7 @@
     "lucide-react": "^0.468.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "viem": "^2.57.17",
     "vite-plugin-node-polyfills": "^0.28.0",
     "zod": "^3.25.76"
   },

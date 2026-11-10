@@ -1,0 +1,16 @@
+{
+  "name": "mochepad-contracts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/compile.mjs",
+    "test": "node scripts/compile.mjs && node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0",
+    "ganache": "^7.9.2",
+    "solc": "^0.8.24",
+    "viem": "^2.57.17"
+  }
+}
